@@ -13,4 +13,6 @@ for indepth
 4-Add  sizing
 5-Add small details last (hover effects, icons, shadows, the diagonal clip-path cuts)
   and i am also uploading my  webdev journey below
-  
+
+
+here is the deployed project link ::: tj-tasks-2026-ojas-sahu.vercel.app  
