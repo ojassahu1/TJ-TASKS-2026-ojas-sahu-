@@ -12,3 +12,5 @@ for indepth
 3-Apply the color palette
 4-Add  sizing
 5-Add small details last (hover effects, icons, shadows, the diagonal clip-path cuts)
+  and i am also uploading my  webdev journey below
+  
