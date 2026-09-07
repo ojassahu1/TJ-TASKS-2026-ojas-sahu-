@@ -1,0 +1,20 @@
+.cont{
+    height: 500px;
+    width: 600px;
+    background-color: aquamarine;
+    border: 3px solid saddlebrown;
+    background-image: url("https://unsplash.com/photos/shallow-focus-photography-of-red-and-pink-roses-wuc-KEIBrdE");
+    background-position: 50% 20%;
+    background-repeat: no-repeat;
+}
+
+.image img{
+    height: 500px;
+    width: 600px;
+    /* object-fit: contain; */
+    /* object-fit: cover; */
+    /* object-position: bottom right; */
+    /* object-fit: fill; */
+    object-position: 50px 60px;
+
+}
