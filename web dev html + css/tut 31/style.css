@@ -1,0 +1,33 @@
+body{
+    background-color: #f88989;
+}
+
+
+@media only screen and (max-width: 300px){
+    body{
+        background-color: #dbf37a;
+    }
+    .boxes{
+        flex-direction: column;
+    }
+    
+
+}
+
+@media screen and (orientation: landscape){
+    .boxes{
+        border: 4px solid #7af3d1;
+    }
+}
+.boxes{
+    display: flex;
+}
+.box{
+    height: 400px;
+    width: 400px;
+    background-color: #a07af3;
+    padding: 32px;
+    margin: 32px;
+
+
+}

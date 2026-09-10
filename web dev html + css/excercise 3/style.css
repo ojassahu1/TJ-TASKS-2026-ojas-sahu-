@@ -1,0 +1,108 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+body{
+    background-color: antiquewhite;
+}
+.box{
+    background-color: white;
+    border: 2px solid black;
+    align-items: center;
+    position: absolute;
+    top: 60px;
+    bottom: 30px;
+    left: 520px;
+    right: 480px;   
+    border-radius: 30px;
+    padding: 100px;
+}
+
+img{
+    position: absolute;
+    height: 300px;
+    width: 500px;
+    top: 75px ;
+    left: 532px;
+    border: 5px solid rgb(235, 222, 222) ;
+    border-radius: 30px;
+}
+
+.box1{
+    position: absolute;
+    border: 2px solid rgb(205, 222, 226);
+    top: 410px;
+    left: 550px;
+    color: gray;
+    display: flex;
+    justify-content: space-between;
+    background-color: whitesmoke;
+    border-radius: 21px;
+    box-sizing: border-box;
+    height: 30px;
+    width: 80px;
+    /* text-align: center; */
+    font-size: 16px;
+    padding-left: 9px;
+    overflow: hidden;
+    
+
+}
+.box2{
+    position: absolute;
+    border: 2px solid rgb(203, 218, 221);
+    top: 410px;
+    left: 640px;
+    color: gray;
+    display: flex;
+    justify-content: space-between;
+    background-color: whitesmoke;
+    border-radius: 21px;
+    box-sizing: border-box;
+    height: 30px;
+    width: 80px;
+    /* text-align: center; */
+    font-size: 16px;
+    padding-left: 15px;
+    overflow: hidden;
+    
+
+
+}
+
+h1{
+    position: absolute;
+    margin-top: 460px;
+    margin-left: 550px;
+    background-color: white;
+}
+.marvel{
+    position: absolute;
+    top: 510px;
+    left: 550px;
+    margin-right: 500px;
+    background-color: white;
+    color: grey;
+}
+.second{
+    position: absolute;
+    border: 1px solid rgb(50, 174, 240);
+    top: 660px;
+    left: 720px;
+    background-color: rgb(174, 231, 243);
+    color: rgb(71, 179, 247);
+    border-radius: 25px;
+    box-sizing: border-box;
+    height: 34px;
+    width: 120px;
+    text-align: center;
+    padding-top: 5px;
+    overflow: hidden;
+
+   
+    
+    
+}
+
+
+

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>audio video and media </title>
+</head>
+
+<body>
+    <h2>video</h2>
+    <video src="E:\Users\ojas sahu\Videos\kratos-god-of-war.mp4"
+        poster="E:\Users\ojas sahu\Pictures\khel-gaon-public-school-prayagraj-logo.jpg" width="531" height="412"
+        controls>use controls to make controls , muted, autoplay, loop , poster workes as a thumbnail </video>
+    <h2>audio</h2>
+    <audio src="E:\Users\ojas sahu\Music\Ishqa Ve.m4a" controls autoplay preload="auto">isqa ve "</audio> <br>
+    <h3> attribute = loop , autoplay, controls , muted, preload= "none, metadata, auto <br>
+        none = this is a default value it indicates the browser should not preload the audio file at all the audio file
+        will only start downloading when the user initiates playbacks . <br>
+        metadata = this value tell the browser to preload the audio file such as its duration and basic information
+        about audio . this can be useful if you want to display the audio duration to the user without fully loading the
+        audio data . <br>
+        auto = this value instruct the browser to preload the entire audio as much as possible without delaying the
+        loading of other important page content . the browser will try to load the audio file in the background so that
+        its ready to play when the user decides to start it . </h3><br>
+    <h2> SVG (scalable vector graphics) </h2>
+    <h3>
+        How to Embed SVG in HTML
+        SVG can be embedded in HTML in several ways:
+
+        Inline SVG: Directly writing the SVG XML code within HTML. <br>
+        Using an (<.img>) tag: Point the src attribute to an SVG file. <br>
+            Using CSS: Setting SVG as a background image in a CSS file.
+    </h3>
+    <h2>Inline SVG Example</h2>
+    <svg height="100" width="100">
+        <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />
+    </svg>
+    <h2>
+        <.img> Tag Example
+    </h2>
+    <img src="E:\Users\ojas sahu\Pictures\khel-gaon-public-school-prayagraj-logo.svg" alt="Sample SVG"
+        class="background">
+    <br>
+    <h2>SVG Attributes <br> <br>
+        SVG comes with a set of attributes to control its behavior: <br>
+
+        width and height: To set the dimensions. <br>
+        viewBox: To set the coordinate system. <br>
+        fill and stroke: To set the colors.</h2>
+    <h2>Creating a Simple Icon</h2>
+    <svg height="30" width="30">
+        <rect width="30" height="30" style="fill:rgb(0,0,255);stroke-width:1;stroke:rgb(0,0,0)" />
+    </svg>
+
+    <h2>i frames </h2>
+    <h3>They allow you to embed another HTML page within your current page.</h3><br>
+    <h3>iFrames offer a variety of use-cases:
+        <br>
+        Content Isolation: iFrames allow you to isolate third-party content, which can improve security. <br>
+        Modularity: Easily embed external plugins, widgets, or content. <br>
+        Resource Separation: Content within an iFrame can load separately from the rest of the page.
+    </h3> <br>
+
+    <iframe src="https://archive.codewithharry.com/tutorial/html-iframes" width="456" height="458"></iframe>
+
+    <h2>Practical Examples</h2><br>
+    <h3>Embedding a YouTube Video</h3>
+    <iframe src="https://www.youtube.com/embed/VIDEO_ID" frameborder="0" allowfullscreen></iframe>
+
+    <h2>Embedding Google Maps</h2>
+
+    <iframe src="https://maps.google.com/maps?q=LOCATION&output=embed" frameborder="0"></iframe>
+
+
+
+
+
+
+
+
+</body>
+
+</html>

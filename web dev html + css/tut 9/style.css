@@ -1,0 +1,13 @@
+/* to access class use dot
+to access id use # */
+.red{
+    color: rebeccapurple;
+}
+
+#firstdiv{
+    background-color: red;
+}
+
+.bg-yellow{
+    color: yellow;
+}

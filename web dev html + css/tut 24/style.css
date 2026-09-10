@@ -1,0 +1,21 @@
+.box
+{
+    background-color: rgb(172, 216, 37);
+
+}   
+
+
+.mac{   color: rgb(228, 20, 20);
+    padding: 20px;
+    margin: 45px;
+    border: 2px solid rgb(110, 224, 95);
+    height: auto;
+    box-sizing: border-box;
+    display: flex;
+    box-shadow: 10px 10px 5px rgb(79, 71, 71);
+    text-shadow: 2px 2px 5px rgb(126, 94, 94);
+    outline-offset: 2px;
+    outline: 2px solid rgb(0, 0, 0);
+    border-radius: 10px;
+
+}
