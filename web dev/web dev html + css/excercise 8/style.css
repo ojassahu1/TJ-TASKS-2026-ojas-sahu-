@@ -1,0 +1,80 @@
+.container{
+    background-color: antiquewhite;
+    border: 2px solid black;
+    height: 500px;
+    width: 90%;
+    position: relative;
+    
+
+}
+
+.box{
+    background-color: aquamarine;
+    border: 2px solid black ;
+    height: 50px;
+    width: 50px;
+    border-radius: 30px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    animation: x-axis 3s linear infinite , y-axis 1s ease-out infinite alternate ;
+    /* animation-timing-function: paused; */
+    /* animation-direction: alternate-reverse; */
+    
+}
+
+
+@keyframes x-axis{
+    from{
+        left: 0%;
+    }
+    to{
+        left:100%;
+    }
+
+}
+
+@keyframes y-axis{
+    from{
+        bottom: 0;
+    }
+    to{
+        bottom: 100%;
+    }
+}
+
+/* 
+@keyframes x-axis{
+    0%{
+        transform: translate(0, 0);
+        
+    }
+    45%{
+        transform: translate(250px, -200px);
+        animation-delay: 1s;
+    }
+    52%{
+        transform: translate(350px, 0);
+        animation-delay: 1s;
+    }
+    60%{
+        transform: translate(450px, -200px);
+        animation-delay: 1s;
+    }
+    100%{
+        transform: translate(600px, 0);
+    }
+
+} */
+/* 
+@keyframes y-axis{
+    from{
+
+    }
+    to{
+        transform: translateY(-200px);
+    }
+
+
+} */
+

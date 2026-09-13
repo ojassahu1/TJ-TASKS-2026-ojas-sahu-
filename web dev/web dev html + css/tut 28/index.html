@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>position property</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+    <div class="parent">
+    <div class="box1 box">  box 1    </div>
+    <div class="box2 box">  box 2   </div>
+    <div class="box3 box">  box 3 </div>
+    <div class="box4 box">  box 4  </div>
+</div>
+
+<!-- relative position means it moves relative to nearby objects  -->
+
+ <!-- z-index :::: -CSS property that controls the stacking order of overlapping elements along the z-axis (the dimension perpendicular to the screen -->
+
+<!-- position absolute  -->
+<!-- CSS position: absolute removes an element from the normal document flow, meaning it no longer occupies space in the layout and siblings treat it as if it doesn't exist.  The element is positioned relative to its nearest positioned ancestor (an ancestor with a position value other than static, such as relative, absolute, or fixed).  If no such ancestor exists, it positions itself relative to the initial containing block  ....
+ it it takes position marking with respect to its parent -->
+
+<!-- position fixed -->
+<!-- CSS position: fixed removes an element from the normal document flow and anchors it relative to the browser viewport.  Unlike other positioning modes, a fixed element remains in the same place even when the user scrolls the page, making it ideal for persistent UI elements.  -->
+ <!-- position sticky -->
+<!-- n contrast, sticky is a hybrid positioning mode that behaves like static (or relative) initially but becomes fixed relative to its nearest scrolling ancestor once a specified threshold is reached during scrolling.
+ Sticky positioning requires at least one inset property (top, right, bottom, or left) to define the threshold; without it, the element will not stick.   -->
+
+ <!-- position static  -->
+  <!-- Static is the default CSS positioning mode where elements follow the normal document flow and ignore offset properties like top or left -->
+
+  <!-- Scope: Static elements are not bounded by scroll containers. Sticky elements are strictly bounded by their nearest scrolling ancestor (the container that allows scrolling); they will not stick if the parent container is shorter than the element or lacks scrollable content -->
+</body>
+</html>
