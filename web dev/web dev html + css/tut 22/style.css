@@ -1,0 +1,33 @@
+.box{
+    border: 2px solid rgb(0, 0, 0);
+    color: rgb(218, 32, 32);
+    background-color: rgb(130, 246, 140);
+    width: auto;
+    height: auto;
+    margin: auto;
+    font-size: 1rem;
+}
+*{
+    box-sizing: border-box; 
+    margin: 0;
+    padding: 0;
+    font-size: 34px;
+}
+p{
+    color: rgb(0, 0, 0);
+    font-size: 1.9rem;
+    text-align: center;
+
+}
+.mycont{
+    color: rgb(232, 50, 207);
+    background-color: rgb(237, 155, 155);
+    width: 100vmin;
+
+
+
+}
+
+
+
+
