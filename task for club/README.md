@@ -1,4 +1,8 @@
 # TJ-TASKS-2026-ojas-sahu-
+Hi i am ojas sahu student of btech cse core first year , i love programming and i am interested in following things :- 
+1. problem solving skills 
+2.  fullstack devlopment and with ai intergration 
+3. learn uses of ai to make new products 
 This Repo is for Interview of freshers 2026 !!
 Here are the ways I thought of before making this website. Also, I have used AI for guidance and making it responsive.
 1-A nav bar
