@@ -116,7 +116,7 @@
 
   .nav-toggle,.nav-burger{display:none;}
 
-  /* ---------- Hero ---------- */
+  /* hero */
   .hero{
     position:relative;
     min-height:100vh;
@@ -155,7 +155,7 @@
   }
   .hero-cta{display:flex;gap:16px;flex-wrap:wrap;}
 
-  /* ---------- Stats ---------- */
+  /* stats  */
   .stats{
     background:var(--charcoal);
     padding:46px 0;
@@ -184,7 +184,7 @@
     color:var(--grey-text);
   }
 
-  /* ---------- Section heads ---------- */
+  /* section head */
   .section{padding:110px 0 90px;}
   .section-head{
     max-width:560px;
@@ -197,7 +197,7 @@
   }
   .section-head p{color:var(--grey-text);font-size:16px;}
 
-  /* ---------- Programs ---------- */
+  /* prgs */
   .program-grid{
     display:grid;
     grid-template-columns:repeat(4,1fr);
@@ -222,7 +222,7 @@
   .program-body h3{font-size:19px;color:var(--off-white);margin-bottom:10px;}
   .program-body p{font-size:14.5px;color:var(--grey-text);}
 
-  /* ---------- Gallery ---------- */
+  /* pics */
   .gallery-grid{
     display:grid;
     grid-template-columns:repeat(4,1fr);
@@ -239,7 +239,7 @@
   .g-tall{grid-row:span 2;}
   .g-wide{grid-column:span 2;}
 
-  /* ---------- Pricing ---------- */
+  /* price */
   .pricing{background:var(--charcoal);}
   .pricing-grid{
     display:grid;
@@ -317,7 +317,7 @@
 
   .plan .btn{text-align:center;}
 
-  /* ---------- Contact / CTA ---------- */
+  /* contact */
   .cta-band{
     background:linear-gradient(120deg, var(--ember-dim), var(--ember));
     padding:64px 0;
@@ -328,7 +328,7 @@
   .cta-band .btn-primary{background:#181008;color:var(--off-white);}
   .cta-band .btn-primary:hover{background:#2a2018;}
 
-  /* ---------- Footer ---------- */
+  /* footer */
   .site-footer{
     background:var(--black);
     padding:60px 0 30px;
@@ -353,7 +353,7 @@
     color:var(--steel-light);
   }
 
-  /* ---------- Responsive ---------- */
+  /* media  */
   @media (max-width:960px){
     .program-grid{grid-template-columns:repeat(2,1fr);}
     .gallery-grid{grid-template-columns:repeat(3,1fr);}
