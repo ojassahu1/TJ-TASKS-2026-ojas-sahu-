@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="description" content="Ojas Sahu - Matrix Developer Terminal & Portfolio. Futuristic cyberpunk bio-card with interactive CLI, digital rain, and reactive developer systems.">
+  <meta name="author" content="Ojas Sahu">
+  <meta name="theme-color" content="#020603">
+  
+  <title>SYSTEM://OJAS-SAHU // MATRIX TERMINAL</title>
+
+  <!-- Google Font: JetBrains Mono for authentic monospace terminal typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+  <!-- Core Cyberpunk Terminal Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="matrix-green">
+
+  <!-- ================= CANVAS DIGITAL RAIN BACKGROUND ================= -->
+  <canvas id="matrix-canvas" aria-hidden="true"></canvas>
+
+  <!-- ================= CRT SCANLINE & VIGNETTE OVERLAY ================= -->
+  <div id="crt-overlay" aria-hidden="true"></div>
+
+  <!-- ================= BOOT SEQUENCE MODAL OVERLAY ================= -->
+  <aside id="boot-overlay" role="dialog" aria-modal="true" aria-label="Terminal Boot Sequence">
+    <div class="boot-terminal-box">
+      <div class="boot-header">> NEURAL_KERNEL_LOADER v4.09.26 // SECURE BOOT</div>
+      <div id="boot-log" aria-live="polite"></div>
+      <div class="boot-skip-container">
+        <button id="skip-boot-btn" aria-label="Skip terminal initialization">[ PRESS ESC OR CLICK TO SKIP ]</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN APPLICATION WRAPPER ================= -->
+  <div id="terminal-wrapper">
+
+    <!-- Top Status Bar & Telemetry -->
+    <header class="matrix-status-bar" role="banner">
+      <div class="status-left">
+        <span class="status-indicator" aria-hidden="true"></span>
+        <span class="sys-node-tag">SYSTEM://OJAS-SAHU/BIO-CORE</span>
+        <span class="sys-telemetry-badge">
+          <span>TIME:</span>
+          <span id="telemetry-time" class="text-bright">--:--:-- IST</span>
+        </span>
+        <span class="sys-telemetry-badge">
+          <span>UPTIME:</span>
+          <span id="telemetry-uptime" class="text-bright">00:00:00</span>
+        </span>
+      </div>
+
+      <div class="status-right">
+        <div class="system-controls">
+          <label for="theme-select" class="sys-telemetry-badge" style="cursor: pointer;">THEME:</label>
+          <select id="theme-select" class="hacker-select" aria-label="Select Matrix Color Scheme">
+            <option value="matrix-green">MATRIX GREEN</option>
+            <option value="cyber-amber">CYBER AMBER</option>
+            <option value="ghost-cyan">GHOST CYAN</option>
+            <option value="blood-red">BLOOD RED</option>
+          </select>
+
+          <button id="audio-toggle-btn" class="toggle-btn" aria-label="Toggle retro mechanical terminal sound">AUDIO: OFF</button>
+          <button id="crt-toggle-btn" class="toggle-btn" aria-label="Toggle CRT scanline filter">CRT: ON</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Terminal Card Frame -->
+    <main id="terminal-main-window" role="main" aria-label="Terminal Portfolio Workspace">
+      
+      <!-- Window Title Bar -->
+      <div class="terminal-titlebar">
+        <div class="titlebar-left">
+          <span class="win-dot red" title="Close Node"></span>
+          <span class="win-dot yellow" title="Sleep Node"></span>
+          <span class="win-dot green" title="Maximize Node"></span>
+          <span class="terminal-title-text">OJAS_SAHU@NEURAL-MATRIX: ~/portfolio</span>
+        </div>
+        <div class="titlebar-right">
+          <span>PID: 4096</span>
+          <span>HOST: MATRIX-CORE</span>
+          <button id="win-btn-expand" class="win-btn" title="Toggle Fullscreen Frame">[⛶]</button>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="terminal-tabs" role="tablist" aria-label="Portfolio Sections">
+        <button class="nav-tab-btn active" data-tab="profile" role="tab" aria-selected="true" aria-controls="pane-profile">[ 01: PROFILE ]</button>
+        <button class="nav-tab-btn" data-tab="skills" role="tab" aria-selected="false" aria-controls="pane-skills">[ 02: SKILLS ]</button>
+        <button class="nav-tab-btn" data-tab="projects" role="tab" aria-selected="false" aria-controls="pane-projects">[ 03: PROJECTS ]</button>
+        <button class="nav-tab-btn" data-tab="terminal" role="tab" aria-selected="false" aria-controls="pane-terminal">[ 04: TERMINAL CLI ]</button>
+        <button class="nav-tab-btn" data-tab="diagnostics" role="tab" aria-selected="false" aria-controls="pane-diagnostics">[ 05: DIAGNOSTICS ]</button>
+        <button class="nav-tab-btn" data-tab="contact" role="tab" aria-selected="false" aria-controls="pane-contact">[ 06: CONTACT ]</button>
+      </nav>
+
+      <!-- Interactive Quick Action Button Bar -->
+      <section class="quick-action-bar" aria-label="Hacker Quick Actions">
+        <button id="btn-access-profile" class="action-chip" aria-label="Access Profile">
+          <span class="text-accent">></span> ACCESS PROFILE
+        </button>
+        <button id="btn-view-projects" class="action-chip" aria-label="View Projects">
+          <span class="text-accent">></span> VIEW PROJECTS
+        </button>
+        <button id="btn-run-diagnostic" class="action-chip" aria-label="Run Diagnostic">
+          <span class="text-accent">></span> RUN DIAGNOSTIC
+        </button>
+        <button id="btn-enter-matrix" class="action-chip" aria-label="Enter The Matrix">
+          <span class="text-accent">></span> ENTER THE MATRIX
+        </button>
+        <button id="btn-hack-system" class="action-chip" aria-label="Hack The System">
+          <span class="text-accent">></span> HACK THE SYSTEM
+        </button>
+        <button id="btn-random-quote" class="action-chip" aria-label="Random Developer Quote">
+          <span class="text-accent">></span> RANDOM DEV QUOTE
+        </button>
+        <button id="btn-productivity" class="action-chip" aria-label="Increase Productivity">
+          <span class="text-accent">></span> PRODUCTIVITY +0.0001%
+        </button>
+        <button id="btn-red-pill" class="action-chip pill-red" aria-label="Take the Red Pill">
+          ● RED PILL
+        </button>
+        <button id="btn-blue-pill" class="action-chip pill-blue" aria-label="Take the Blue Pill">
+          ● BLUE PILL
+        </button>
+      </section>
+
+      <!-- Terminal Body / Dynamic Panes -->
+      <div class="terminal-content-area">
+
+        <!-- ================= PANE 01: PROFILE ================= -->
+        <section id="pane-profile" class="terminal-pane active" role="tabpanel" aria-labelledby="tab-profile">
+          <div class="profile-card-layout">
+            
+            <!-- Left Column: Avatar & Telemetry -->
+            <div class="profile-avatar-column">
+              <div class="avatar-ascii-frame">
+                <div class="avatar-scan" aria-hidden="true"></div>
+                <div class="avatar-glyph" aria-hidden="true">λ</div>
+                <span class="text-dim" style="font-size: 10px; margin-top: 4px;">OPERATOR_NODE</span>
+              </div>
+              <div class="avatar-status-pill">
+                ● STATUS: <span id="profile-status" class="text-bright">ONLINE</span>
+              </div>
+              <div class="avatar-metrics">
+                <div>CLEARANCE: <span class="text-bright">ROOT / LEVEL-7</span></div>
+                <div>LOCATION: <span id="profile-location" class="text-bright">India</span></div>
+                <div>EDUCATION: <span class="text-bright">B.Tech CSE Core</span></div>
+                <div>CYCLE: <span class="text-bright">2026 Batch</span></div>
+              </div>
+            </div>
+
+            <!-- Right Column: Developer Bio & Details -->
+            <div class="profile-info-column">
+              <div class="profile-header-banner">
+                <div class="profile-tag">> INITIALIZING USER PROFILE... ACCESS GRANTED</div>
+                <h1 id="profile-name" class="profile-name">OJAS SAHU</h1>
+                <div id="profile-role" class="profile-role">B.Tech CSE | Developer | Builder</div>
+              </div>
+
+              <div class="profile-quote-box">
+                <span id="profile-tagline">"Building things that probably shouldn't work... but do."</span>
+              </div>
+
+              <div class="profile-meta-grid">
+                <div class="meta-item">
+                  <span class="meta-label">> FOCUS AREA</span>
+                  <span class="meta-val">Full-Stack & Systems Architecture</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">> CODE WEAPONS</span>
+                  <span class="meta-val">Java, JavaScript, React, AI</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">> MISSION</span>
+                  <span class="meta-val">Crafting High-Performance Software</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">> NEURAL LINK</span>
+                  <span class="meta-val text-glow">STABLE // 60 FPS</span>
+                </div>
+              </div>
+
+              <div class="profile-bio-text">
+                <p id="profile-bio">
+                  First-year B.Tech CSE Core student obsessed with high-performance web systems, modern frontends, AI tooling, and interactive terminal interfaces. Passionate about turning complex logic into sleek, responsive digital experiences.
+                </p>
+              </div>
+
+              <div class="profile-interests-wrapper">
+                <div class="interests-label">> SPECIALIZATION REGISTERS:</div>
+                <div id="profile-interests" class="interests-cloud">
+                  <!-- Dynamically populated from data.js -->
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ================= PANE 02: SKILLS ================= -->
+        <section id="pane-skills" class="terminal-pane" role="tabpanel" aria-labelledby="tab-skills">
+          <div class="skills-intro" style="margin-bottom: 16px;">
+            <span class="text-dim">> QUERYING INSTALLED LIBRARIES, RUNTIMES & CAPABILITY VECTORS...</span>
+          </div>
+          <div id="skills-container" class="skills-container">
+            <!-- Dynamically populated from data.js -->
+          </div>
+        </section>
+
+        <!-- ================= PANE 03: PROJECTS ================= -->
+        <section id="pane-projects" class="terminal-pane" role="tabpanel" aria-labelledby="tab-projects">
+          <div class="projects-intro" style="margin-bottom: 16px;">
+            <span class="text-dim">> FETCHING ACTIVE REPOSITORIES & DEPLOYMENTS FROM VIRTUAL CLUSTER...</span>
+          </div>
+          <div id="projects-container" class="projects-grid">
+            <!-- Dynamically populated from data.js -->
+          </div>
+        </section>
+
+        <!-- ================= PANE 04: INTERACTIVE CLI TERMINAL ================= -->
+        <section id="pane-terminal" class="terminal-pane" role="tabpanel" aria-labelledby="tab-terminal">
+          <div class="cli-shell-wrapper">
+            <div id="terminal-output" role="region" aria-live="polite" aria-label="Terminal Log Output">
+              <!-- Command output is dynamically logged here -->
+            </div>
+            <div class="terminal-input-row">
+              <label for="terminal-cli-input" class="terminal-prompt-label">guest@ojas-matrix:~$</label>
+              <input 
+                type="text" 
+                id="terminal-cli-input" 
+                autocomplete="off" 
+                autocorrect="off" 
+                autocapitalize="off" 
+                spellcheck="false" 
+                aria-label="Terminal Command Input. Type help to see available commands."
+                placeholder="type 'help', 'about', 'skills', 'matrix', 'sudo hire-me'..."
+              >
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= PANE 05: DIAGNOSTICS ================= -->
+        <section id="pane-diagnostics" class="terminal-pane" role="tabpanel" aria-labelledby="tab-diagnostics">
+          <div style="margin-bottom: 16px;">
+            <span class="text-dim">> REAL-TIME HARDWARE, NEURAL RUNTIME & CAFFEINE METRICS:</span>
+          </div>
+          <div id="diagnostics-container">
+            <!-- Dynamically populated from data.js -->
+          </div>
+        </section>
+
+        <!-- ================= PANE 06: CONTACT ================= -->
+        <section id="pane-contact" class="terminal-pane" role="tabpanel" aria-labelledby="tab-contact">
+          <div style="margin-bottom: 16px;">
+            <span class="text-dim">> INITIATING SECURE TRANSMISSION HANDSHAKE WITH OPERATOR...</span>
+          </div>
+          <div class="contact-grid">
+            <div class="contact-card">
+              <div class="contact-card-title">> DIRECT COMMS CHANNELS</div>
+              <div class="contact-link-row">
+                <span class="text-dim">[EMAIL]</span>
+                <a id="contact-email" href="#" class="terminal-link">ojas.sahu.dev@gmail.com</a>
+              </div>
+              <div class="contact-link-row">
+                <span class="text-dim">[GITHUB]</span>
+                <a id="contact-github" href="#" target="_blank" rel="noopener" class="terminal-link">github.com/ojassahu</a>
+              </div>
+              <div class="contact-link-row">
+                <span class="text-dim">[LINKEDIN]</span>
+                <a id="contact-linkedin" href="#" target="_blank" rel="noopener" class="terminal-link">linkedin.com/in/ojassahu</a>
+              </div>
+              <div class="contact-link-row">
+                <span class="text-dim">[PORTFOLIO]</span>
+                <a id="contact-portfolio" href="#" target="_blank" rel="noopener" class="terminal-link">Live Deployed Website</a>
+              </div>
+            </div>
+
+            <div class="contact-card">
+              <div class="contact-card-title">> QUICK TRANSMISSION PROTOCOL</div>
+              <p class="text-dim" style="font-size: 12px;">
+                Looking for an energetic, fast-learning developer who loves building high-impact software? Send an uplink signal.
+              </p>
+              <div style="margin-top: 10px;">
+                <a href="mailto:ojas.sahu.dev@gmail.com?subject=Opportunity%20//%20Fresher%20Interview%202026" class="btn-terminal-link" style="display: block; text-align: center; padding: 10px;">
+                  [ DISPATCH DIRECT UPLINK / HIRE ME ]
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- Footer Status & Tips -->
+    <footer class="matrix-footer" role="contentinfo">
+      <div class="footer-left">
+        <span>MATRIX OS [v2.6]</span>
+        <span>•</span>
+        <span>STATUS: ALL CIRCUITS NOMINAL</span>
+        <span>•</span>
+        <span>TRY: ↑ ↑ ↓ ↓ ← → ← → B A</span>
+      </div>
+      <div class="footer-right">
+        <span>COORDINATES: 20.59° N, 78.96° E (INDIA)</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- ================= POPUP MODAL DIALOG ================= -->
+  <aside id="matrix-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-window">
+      <div class="modal-header">
+        <span id="modal-title">SYSTEM NOTICE</span>
+        <button id="modal-close-btn" aria-label="Close dialog">[ ESC / CLOSE ]</button>
+      </div>
+      <div id="modal-body"></div>
+    </div>
+  </aside>
+
+  <!-- ================= MODULAR JAVASCRIPT ARCHITECTURE ================= -->
+  <!-- 1. Central Profile Data Configuration -->
+  <script src="data.js"></script>
+  <!-- 2. Web Audio API Vintage Keystroke & Chime Synthesizer -->
+  <script src="audio.js"></script>
+  <!-- 3. Matrix Digital Rain Canvas Simulation Engine -->
+  <script src="matrix.js"></script>
+  <!-- 4. Interactive CLI Command Line & Parser -->
+  <script src="terminal.js"></script>
+  <!-- 5. Core Application Coordinator & Event Bindings -->
+  <script src="app.js"></script>
+
+</body>
+</html>
+
