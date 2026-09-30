@@ -33,8 +33,14 @@ class ScientificCalculator {
     this.justEvaluated = false; // true right after pressing =
 
     // Animation
+    this.tiltX = 0;
+    this.tiltY = 0;
+    this.targetTiltX = 0;
+    this.targetTiltY = 0;
+    this.rafId = null;
     this.destructTimer = null;
     this.animationTimers = new Set();
+    this.buttonTimers = new WeakMap();
     this.listeners = [];
     this.isActive = false;
     this.maxExpressionLength = 256;
@@ -67,6 +73,7 @@ class ScientificCalculator {
   setActive(active) {
     this.isActive = active;
     if (!active) {
+      this.stopTiltLoop();
       if (this.isSelfDestructing) {
         this.cancelSelfDestruct();
       } else {
@@ -252,6 +259,23 @@ class ScientificCalculator {
       terminalAudio?.playKeyClick?.();
     });
 
+    if (!this.prefersReducedMotion && this.scene) {
+      this.listen(this.scene, 'mousemove', (event) => this.handleMouseMove(event));
+      this.listen(this.scene, 'mouseleave', () => {
+        this.targetTiltX = 0;
+        this.targetTiltY = 0;
+        this.startTiltLoop();
+      });
+      this.listen(this.scene, 'touchmove', (event) => {
+        const touch = event.touches[0];
+        if (touch) this.handlePointerMove(touch.clientX, touch.clientY);
+      }, { passive: true });
+      this.listen(this.scene, 'touchend', () => {
+        this.targetTiltX = 0;
+        this.targetTiltY = 0;
+        this.startTiltLoop();
+      }, { passive: true });
+    }
   }
 
   // ================================================================
@@ -297,6 +321,8 @@ class ScientificCalculator {
 
     // Don't steal from the terminal CLI input
     if (document.activeElement?.id === 'terminal-cli-input') return;
+    if (document.querySelector('#ojas-command-palette.open, #matrix-modal.open')) return;
+    if (e.target instanceof HTMLButtonElement && this.container.contains(e.target) && ['Enter', ' '].includes(e.key)) return;
 
     if (this.isSelfDestructing) return;
 
@@ -328,6 +354,8 @@ class ScientificCalculator {
     else if (act === 'equals')          this.evaluate();
     else if (act === 'backspace')       this.backspace();
     else if (act === 'clear')           this.clear();
+    this.animateKeyboardButton(act);
+    terminalAudio?.playKeyClick?.();
   }
 
   // Called by the app-level escape controller only when this calculator has
@@ -699,12 +727,98 @@ class ScientificCalculator {
 
   }
 
+  handleMouseMove(event) {
+    if (this.prefersReducedMotion || !this.isActive) return;
+    this.handlePointerMove(event.clientX, event.clientY);
+  }
+
+  handlePointerMove(clientX, clientY) {
+    if (!this.scene || !this.isActive || this.prefersReducedMotion) return;
+    const rect = this.scene.getBoundingClientRect();
+    const dx = Math.max(-1, Math.min(1, (clientX - (rect.left + rect.width / 2)) / Math.max(rect.width / 2, 1)));
+    const dy = Math.max(-1, Math.min(1, (clientY - (rect.top + rect.height / 2)) / Math.max(rect.height / 2, 1)));
+    const maxTilt = window.innerWidth < 640 ? 4 : 10;
+    this.targetTiltX = -dy * maxTilt;
+    this.targetTiltY = dx * maxTilt;
+    this.startTiltLoop();
+  }
+
+  startTiltLoop() {
+    if (this.prefersReducedMotion || !this.isActive || this.rafId || !this.card) return;
+    this.card.style.willChange = 'transform';
+
+    const animate = () => {
+      this.rafId = null;
+      if (!this.isActive) return;
+      this.tiltX += (this.targetTiltX - this.tiltX) * 0.18;
+      this.tiltY += (this.targetTiltY - this.tiltY) * 0.18;
+      this.card.style.transform = `rotateX(${this.tiltX}deg) rotateY(${this.tiltY}deg) translateZ(0)`;
+
+      const unsettled = Math.abs(this.targetTiltX - this.tiltX) > 0.04 || Math.abs(this.targetTiltY - this.tiltY) > 0.04;
+      if (unsettled) {
+        this.rafId = requestAnimationFrame(animate);
+      } else {
+        this.tiltX = this.targetTiltX;
+        this.tiltY = this.targetTiltY;
+        this.card.style.transform = `rotateX(${this.tiltX}deg) rotateY(${this.tiltY}deg) translateZ(0)`;
+        this.card.style.willChange = '';
+      }
+    };
+
+    this.rafId = requestAnimationFrame(animate);
+  }
+
+  stopTiltLoop() {
+    if (this.rafId) cancelAnimationFrame(this.rafId);
+    this.rafId = null;
+    this.tiltX = 0;
+    this.tiltY = 0;
+    this.targetTiltX = 0;
+    this.targetTiltY = 0;
+    if (this.card) {
+      this.card.style.transform = '';
+      this.card.style.willChange = '';
+    }
+  }
+
   // ================================================================
   // ANIMATIONS
   // ================================================================
+  animateKeyboardButton(action) {
+    const selectors = {
+      percent: '[data-action="percent"]',
+      decimal: '[data-action="decimal"]',
+      factorial: '[data-action="factorial"]',
+      'paren-open': '[data-action="paren-open"]',
+      'paren-close': '[data-action="paren-close"]',
+      equals: '[data-action="equals"]',
+      backspace: '[data-action="backspace"]',
+      clear: '[data-action="clear"]',
+      'op-^': '[data-action="power"]',
+      'op-+': '[data-action="op"][data-op="+"]',
+      'op--': '[data-action="op"][data-op="-"]',
+      'op-×': '[data-action="op"][data-op="×"]',
+      'op-÷': '[data-action="op"][data-op="÷"]'
+    };
+    const selector = action.startsWith('digit-')
+      ? `[data-action="digit"][data-digit="${action.slice(6)}"]`
+      : selectors[action];
+    const button = selector ? this.container.querySelector(selector) : null;
+    if (button) this.animateButtonPress(button);
+  }
+
   animateButtonPress(btn) {
+    const previousTimer = this.buttonTimers.get(btn);
+    if (previousTimer) {
+      clearTimeout(previousTimer);
+      this.animationTimers.delete(previousTimer);
+    }
     btn.classList.add('pressed');
-    this.scheduleAnimation(() => btn.classList.remove('pressed'), 120);
+    const timer = this.scheduleAnimation(() => {
+      btn.classList.remove('pressed');
+      if (this.buttonTimers.get(btn) === timer) this.buttonTimers.delete(btn);
+    }, 120);
+    this.buttonTimers.set(btn, timer);
   }
 
   animateResult() {
@@ -736,6 +850,7 @@ class ScientificCalculator {
   destroy() {
     if (this.isSelfDestructing) this.cancelSelfDestruct();
     this.isActive = false;
+    this.stopTiltLoop();
     this.clearAnimationTimers();
     this.listeners.forEach(([target, eventName, handler, options]) => {
       target.removeEventListener(eventName, handler, options);
