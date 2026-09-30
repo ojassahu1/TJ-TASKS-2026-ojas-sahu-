@@ -1,110 +1,59 @@
 TJ-TASKS-2026-ojas-sahu
-Hi, I’m Ojas Sahu, a first-year B.Tech CSE Core student. I enjoy programming and I’m interested in:
 
-Improving my problem-solving skills.
+Hi, I’m Ojas Sahu, a first-year B.Tech CSE Core student with an interest in programming, problem-solving, full-stack development, and AI-based applications.
 
-Full-stack development with AI integration.
+This repository contains my submission for the Fresher Interview 2026. The project is a responsive gym website with sections for programs, gallery, pricing plans, statistics, and contact-related interactions.
 
-Using AI to build useful and innovative products.
+## Project Overview
 
-This repository contains my submission for the Fresher Interview 2026.
+The website was created with a focus on:
 
-Website Planning
-Before building the website, I planned the following sections:
+- A clean and modern user interface.
+- Responsive layouts for desktop, tablet, and mobile devices.
+- Structured sections for presenting gym services and membership plans.
+- Interactive elements such as navigation menus, pricing toggles, image previews, forms, and scroll-based effects.
+- A dark visual theme with bold typography, accent colors, cards, shadows, and modern layouts.
 
-A navigation bar.
+## Technologies Used
 
-An introduction and hero section.
+- HTML
+- CSS
+- JavaScript
 
-Exercise images.
+## Project Structure
 
-Three pricing plans with different features.
+- `index.html` – Contains the main structure and content of the website.
+- `style.css` – Handles the design, layout, colors, animations, and responsive behavior.
+- `script.js` – Adds interactivity and dynamic features.
 
-A responsive layout that requires scrolling.
+## Main Features
 
-Development Process
-For the detailed implementation, I focused on:
+- Responsive navigation bar.
+- Hero section with call-to-action buttons.
+- Workout program cards.
+- Image gallery with lightbox functionality.
+- Membership pricing section.
+- Monthly and yearly pricing options.
+- Booking form modal.
+- Animated statistics.
+- Scroll-based navigation effects.
+- Back-to-top button.
+- Mobile-friendly layout.
 
-Resetting the default spacing and fonts.
+## Design Approach
 
-Structuring each section using Flexbox and CSS Grid.
+The website was developed by first planning the overall structure and then building each section individually. Flexbox and CSS Grid were used for layouts, while media queries were added to support different screen sizes.
 
-Applying a consistent color palette.
+The design includes a dark color scheme, bold headings, accent colors, hover effects, shadows, and clipped section edges to create a modern gym-inspired appearance.
 
-Adjusting sizes and spacing.
+AI tools were used during the development process for guidance, improving responsiveness, and refining parts of the implementation.
 
-Adding finishing touches such as hover effects, icons, shadows, and diagonal clip-path designs.
+## How to Run Locally
 
-How the Code Works
-The project uses three main files:
+1. Clone or download the repository.
+2. Open `index.html` in a browser.
+3. You can also use the Live Server extension in VS Code.
 
-index.html
+## Live Project
 
-style.css
-
-script.js
-
-1. HTML (index.html)
-The HTML file provides the structure of the website.
-
-Navbar (<header class="nav">): Contains the gym logo, mobile menu toggle (#nav-toggle), and navigation links for Home, Programs, Gallery, Pricing, and Contact.
-
-Hero Section (#home): Displays the main banner, headline, description, and call-to-action buttons.
-
-Stats (.stats): Shows details such as 500+ members, 12 trainers, 40+ stations, and 7 days open.
-
-Programs (#programs): Contains four workout categories: Strength, Cardio, Coaching, and Women’s Strength.
-
-Gallery (#gallery): Displays gym images in a grid layout using different image sizes such as .g-tall and .g-wide.
-
-Pricing (#pricing): Includes three membership plans: Bronze, Silver, and Gold, along with their features and a monthly/yearly billing toggle.
-
-Modals: Includes a lightbox for viewing gallery images and a booking modal for requesting a free trial pass.
-
-Back to Top Button (#back-to-top): Allows users to quickly return to the top of the page.
-
-2. CSS (style.css)
-The CSS file controls the design, layout, and responsiveness of the website.
-
-Colors (:root): Uses variables such as --black, --charcoal, and --ember to create a dark gym-themed design.
-
-Fonts: Uses Oswald for headings and Inter for body text.
-
-Layouts: Uses CSS Grid for the program cards, pricing plans, and image gallery, while Flexbox is used for the navbar and buttons.
-
-Diagonal Designs: Uses clip-path: polygon(...) to create sharp, modern edges on the hero section and cards.
-
-Responsive Design:
-
-@media (max-width: 960px): Changes four-column layouts into two columns and stacks the pricing cards on tablets.
-
-@media (max-width: 700px): Hides the desktop navigation links and displays a mobile menu drawer.
-
-@media (max-width: 540px): Stacks the buttons and adjusts spacing for smaller screens.
-
-3. JavaScript (script.js)
-The JavaScript file handles the interactive features of the website.
-
-Mobile Menu: Opens and closes the navigation menu on smaller screens. It also changes the hamburger icon into an “X”.
-
-ScrollSpy: Highlights the active navigation link based on the section currently visible on the screen.
-
-Navbar Shadow: Adds a darker background and blur effect to the navbar after scrolling 40 pixels.
-
-Stat Counter Animation: Animates the numbers in the statistics section when it comes into view.
-
-Monthly/Yearly Pricing Toggle: Updates the displayed prices and applies a 20% discount for yearly plans.
-
-Gallery Lightbox: Opens a full-screen image viewer when an image is clicked. Users can navigate using the Previous and Next buttons, arrow keys, or mobile swipes.
-
-Booking Modal: Opens a form when users select “Book a free visit” or “Start with [Plan]”. After submitting the form, a confirmation message is displayed.
-
-Back to Top Button: Appears after scrolling and smoothly returns the user to the top of the page.
-
-How to Run Locally
-Open index.html in a web browser such as Chrome, Edge, or Firefox.
-
-Alternatively, open the project in VS Code and use the Live Server extension.
-
-Deployed Project
-View the deployed project
+[View the deployed website](https://tj-tasks-2026-ojas-sahu.vercel.app)
