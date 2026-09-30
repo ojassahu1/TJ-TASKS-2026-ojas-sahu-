@@ -159,7 +159,7 @@ const PROFILE_DATA = {
   contact: {
     github: "https://github.com/ojassahu",
     linkedin: "https://linkedin.com/in/ojassahu",
-    email: "ojas.sahu.dev@gmail.com",
+    email: "mailto:ojas.sahu.dev@gmail.com",
     portfolio: "https://tj-task-2026-ojas-sahu.vercel.app/",
     terminalChannel: "IRC #ojas-matrix // Port 1337"
   },

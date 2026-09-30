@@ -10,6 +10,7 @@ class MatrixApp {
   constructor() {
     this.terminal = null;
     this.currentTab = "profile";
+    this.terminalReturnTab = "profile";
     this.bootComplete = false;
     this.konamiCode = [
       "ArrowUp",
@@ -25,6 +26,13 @@ class MatrixApp {
     ];
     this.konamiProgress = 0;
     this.globalClickCount = 0;
+    this.modalReturnFocus = null;
+    this.fullscreenReturnFocus = null;
+    this.bootInterval = null;
+    this.bootFinishTimer = null;
+    this.bootSkipHandler = null;
+    this.os = null;
+    this._escapeHandler = (event) => this.handleEscape(event);
   }
 
   init() {
@@ -35,9 +43,12 @@ class MatrixApp {
     this.bindTabNavigation();
     this.bindActionButtons();
     this.bindWindowControls();
+    this.bindModalControls();
+    this.bindEscapeHandling();
     this.bindEasterEggs();
     this.bindLiveTelemetry();
     this.renderDynamicContent();
+    this.os = typeof OjasOS === "function" ? new OjasOS(this) : null;
 
     // Start boot sequence
     this.runBootSequence();
@@ -55,6 +66,18 @@ class MatrixApp {
       return;
     }
 
+    if (localStorage.getItem("ojas_os_booted") === "true") {
+      bootOverlay.style.display = "none";
+      this.bootComplete = true;
+      return;
+    }
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      bootLog.textContent = "SYSTEM READY. WELCOME, OJAS.";
+      this.finishBoot();
+      return;
+    }
+
     const messages = [
       "[SYSTEM_INIT] BIOS v4.09.26 Quantum Core...",
       "[SYSTEM_INIT] Scanning RAM: 64TB High-Bandwidth Memory OK",
@@ -66,7 +89,7 @@ class MatrixApp {
     ];
 
     let index = 0;
-    const interval = setInterval(() => {
+    this.bootInterval = setInterval(() => {
       if (index < messages.length) {
         const line = document.createElement("div");
         line.className = index === messages.length - 1 ? "boot-line highlight" : "boot-line";
@@ -75,46 +98,60 @@ class MatrixApp {
         terminalAudio.playKeyClick();
         index++;
       } else {
-        clearInterval(interval);
-        setTimeout(() => this.finishBoot(), 400);
+        clearInterval(this.bootInterval);
+        this.bootFinishTimer = setTimeout(() => this.finishBoot(), 400);
       }
-    }, 240);
+    }, 210);
 
-    // Skip button click or ESC key
-    const skipHandler = () => {
-      clearInterval(interval);
+    // Skip button. ESC is handled by the app-wide overlay controller.
+    if (skipBtn && this.bootSkipHandler) {
+      skipBtn.removeEventListener("click", this.bootSkipHandler);
+    }
+    this.bootSkipHandler = () => {
+      clearInterval(this.bootInterval);
+      clearTimeout(this.bootFinishTimer);
       this.finishBoot();
     };
 
-    if (skipBtn) skipBtn.addEventListener("click", skipHandler);
-
-    window.addEventListener("keydown", function escListener(e) {
-      if (e.key === "Escape") {
-        window.removeEventListener("keydown", escListener);
-        skipHandler();
-      }
-    });
+    if (skipBtn) {
+      skipBtn.addEventListener("click", this.bootSkipHandler);
+      skipBtn.focus();
+    }
   }
 
   finishBoot() {
     if (this.bootComplete) return;
     this.bootComplete = true;
+    localStorage.setItem("ojas_os_booted", "true");
 
     const bootOverlay = document.getElementById("boot-overlay");
     if (bootOverlay) {
-      bootOverlay.style.opacity = "0";
-      setTimeout(() => {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
         bootOverlay.style.display = "none";
-      }, 500);
+      } else {
+        bootOverlay.style.opacity = "0";
+        setTimeout(() => {
+          bootOverlay.style.display = "none";
+        }, 500);
+      }
     }
 
     terminalAudio.playAccessGranted();
 
-    // Focus terminal input
-    const cliInput = document.getElementById("terminal-cli-input");
-    if (cliInput) {
-      cliInput.focus();
-    }
+    document.querySelector(".nav-tab-btn[aria-selected='true']")?.focus();
+  }
+
+  restartBoot() {
+    const bootOverlay = document.getElementById("boot-overlay");
+    const bootLog = document.getElementById("boot-log");
+    if (!bootOverlay || !bootLog) return;
+    clearInterval(this.bootInterval);
+    clearTimeout(this.bootFinishTimer);
+    bootLog.innerHTML = "";
+    bootOverlay.style.display = "flex";
+    bootOverlay.style.opacity = "1";
+    this.bootComplete = false;
+    this.runBootSequence();
   }
 
   // ================= DYNAMIC CONTENT RENDERING ================= //
@@ -220,11 +257,23 @@ class MatrixApp {
   <div class="project-actions">
     ${p.links.demo !== "#" ? `<a href="${p.links.demo}" target="_blank" rel="noopener" class="btn-terminal-link" aria-label="Live Demo for ${p.name}">[ RUN DEMO ]</a>` : ""}
     <a href="${p.links.github}" target="_blank" rel="noopener" class="btn-terminal-link" aria-label="GitHub for ${p.name}">[ REPO // GITHUB ]</a>
+    <button class="project-inspect-btn" type="button" data-project-id="${p.id}">[ INSPECT MODULE ]</button>
   </div>
 </div>`;
     });
 
     container.innerHTML = html;
+    container.querySelectorAll(".project-inspect-btn").forEach((button) => {
+      button.addEventListener("click", () => {
+        const project = PROFILE_DATA.projects.find((item) => item.id === button.dataset.projectId);
+        if (!project) return;
+        matrixEngine?.triggerOverdrive?.(1200);
+        this.showModal(
+          `PROJECT MODULE // ${project.name.toUpperCase()}`,
+          `ACCESSING PROJECT DATABASE…\nPROJECT FOUND.\n\nSTATUS: ${project.status}\nCATEGORY: ${project.category}\n\n${project.description}\n\nTECH: ${project.techStack.join(" · ")}`
+        );
+      });
+    });
   }
 
   renderDiagnosticsPanel() {
@@ -310,19 +359,45 @@ class MatrixApp {
         this.switchTab(targetTab);
         terminalAudio.playKeyClick();
       });
+
+      btn.addEventListener("keydown", (event) => {
+        const currentIndex = Array.from(tabButtons).indexOf(btn);
+        let nextIndex = currentIndex;
+        if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+          nextIndex = (currentIndex + 1) % tabButtons.length;
+        } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+          nextIndex = (currentIndex - 1 + tabButtons.length) % tabButtons.length;
+        } else if (event.key === "Home") {
+          nextIndex = 0;
+        } else if (event.key === "End") {
+          nextIndex = tabButtons.length - 1;
+        } else {
+          return;
+        }
+
+        event.preventDefault();
+        const nextTab = tabButtons[nextIndex];
+        this.switchTab(nextTab.getAttribute("data-tab"));
+        nextTab.focus();
+      });
     });
   }
 
   switchTab(targetTab) {
     if (!targetTab) return;
+    if (targetTab === "terminal" && this.currentTab !== "terminal") {
+      this.terminalReturnTab = this.currentTab;
+    }
     this.currentTab = targetTab;
 
     // Update active tab buttons
     document.querySelectorAll(".nav-tab-btn").forEach((btn) => {
       if (btn.getAttribute("data-tab") === targetTab) {
         btn.classList.add("active");
+        btn.setAttribute("aria-selected", "true");
       } else {
         btn.classList.remove("active");
+        btn.setAttribute("aria-selected", "false");
       }
     });
 
@@ -335,11 +410,23 @@ class MatrixApp {
       }
     });
 
+    if (typeof calcInstance !== "undefined" && calcInstance) {
+      calcInstance.setActive(targetTab === "calculator");
+    }
+
     // If switching to terminal tab, autofocus input
     if (targetTab === "terminal") {
       const input = document.getElementById("terminal-cli-input");
       if (input) setTimeout(() => input.focus(), 50);
     }
+
+    // Lazy-init calculator on first visit
+    if (targetTab === "calculator" && typeof initCalcIfNeeded === "function") {
+      setTimeout(() => initCalcIfNeeded(), 30);
+    }
+
+    this.terminal?.setContext?.(targetTab);
+    this.os?.setActiveModule?.(targetTab);
   }
 
   // ================= INTERACTIVE ACTION BUTTONS ================= //
@@ -454,27 +541,115 @@ Back to reality!`
     }
   }
 
+  // ================= OVERLAY & ESCAPE CONTROLLER ================= //
+
+  bindEscapeHandling() {
+    // Capture phase gives the active overlay first refusal before the
+    // calculator's document-level shortcut handler can clear its display.
+    window.addEventListener("keydown", this._escapeHandler, true);
+  }
+
+  handleEscape(event) {
+    if (event.key !== "Escape") return;
+
+    const bootOverlay = document.getElementById("boot-overlay");
+    const modal = document.getElementById("matrix-modal");
+    const windowFrame = document.getElementById("terminal-main-window");
+    let closed = false;
+
+    // Close the topmost active layer only. This preserves the expected
+    // sequence when a modal sits above another expandable UI state.
+    if (!this.bootComplete && bootOverlay?.style.display !== "none") {
+      this.finishBoot();
+      closed = true;
+    } else if (window.ojasOS?.handleEscape?.()) {
+      closed = true;
+    } else if (modal?.classList.contains("open")) {
+      this.closeModal();
+      closed = true;
+    } else if (typeof calcInstance !== "undefined" && calcInstance?.handleEscape?.()) {
+      closed = true;
+    } else if (windowFrame?.classList.contains("fullscreen-mode")) {
+      this.exitFullscreenMode();
+      closed = true;
+    } else if (this.currentTab === "terminal") {
+      const returnTabButton = Array.from(document.querySelectorAll(".nav-tab-btn"))
+        .find((button) => button.getAttribute("data-tab") === this.terminalReturnTab);
+      this.switchTab(returnTabButton?.getAttribute("data-tab") || "profile");
+      returnTabButton?.focus();
+      closed = true;
+    }
+
+    if (closed) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
+  }
+
+  bindModalControls() {
+    const modal = document.getElementById("matrix-modal");
+    const closeBtn = document.getElementById("modal-close-btn");
+    const bootOverlay = document.getElementById("boot-overlay");
+
+    closeBtn?.addEventListener("click", () => this.closeModal());
+    modal?.addEventListener("keydown", (event) => this.trapFocus(event, modal));
+    bootOverlay?.addEventListener("keydown", (event) => this.trapFocus(event, bootOverlay));
+    modal?.addEventListener("click", (event) => {
+      if (event.target === modal) this.closeModal();
+    });
+  }
+
+  trapFocus(event, container) {
+    if (event.key !== "Tab") return;
+    const focusable = Array.from(container.querySelectorAll(
+      "a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex='-1'])"
+    )).filter((element) => element.getClientRects().length > 0);
+    if (focusable.length === 0) {
+      event.preventDefault();
+      return;
+    }
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && (document.activeElement === first || !container.contains(document.activeElement))) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && (document.activeElement === last || !container.contains(document.activeElement))) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
+
   // ================= MODAL DIALOG CONTROLLER ================= //
 
   showModal(title, text) {
     const modal = document.getElementById("matrix-modal");
     const modalTitle = document.getElementById("modal-title");
     const modalBody = document.getElementById("modal-body");
-    const closeBtn = document.getElementById("modal-close-btn");
 
     if (!modal || !modalTitle || !modalBody) return;
 
+    const activeElement = document.activeElement;
+    this.modalReturnFocus = activeElement instanceof HTMLElement ? activeElement : null;
     modalTitle.textContent = title;
     modalBody.textContent = text;
     modal.classList.add("open");
+    document.getElementById("modal-close-btn")?.focus();
+  }
 
-    const closeHandler = () => {
-      modal.classList.remove("open");
-      terminalAudio.playKeyClick();
-      if (closeBtn) closeBtn.removeEventListener("click", closeHandler);
-    };
+  closeModal() {
+    const modal = document.getElementById("matrix-modal");
+    if (!modal?.classList.contains("open")) return false;
 
-    if (closeBtn) closeBtn.addEventListener("click", closeHandler);
+    modal.classList.remove("open");
+    terminalAudio.playKeyClick();
+
+    const returnFocus = this.modalReturnFocus;
+    this.modalReturnFocus = null;
+    if (returnFocus?.isConnected && typeof returnFocus.focus === "function") {
+      returnFocus.focus();
+    }
+    return true;
   }
 
   // ================= WINDOW & SYSTEM CONTROLS ================= //
@@ -507,7 +682,8 @@ Back to reality!`
     if (themeSelect) {
       themeSelect.addEventListener("change", (e) => {
         const theme = e.target.value;
-        document.body.className = theme;
+        document.body.classList.remove("matrix-green", "cyber-amber", "ghost-cyan", "blood-red");
+        document.body.classList.add(theme);
         if (matrixEngine) matrixEngine.setTheme(theme);
         terminalAudio.playAccessGranted();
       });
@@ -518,10 +694,32 @@ Back to reality!`
     const winContainer = document.getElementById("terminal-main-window");
     if (winExpandBtn && winContainer) {
       winExpandBtn.addEventListener("click", () => {
-        winContainer.classList.toggle("fullscreen-mode");
-        terminalAudio.playKeyClick();
+        if (winContainer.classList.contains("fullscreen-mode")) {
+          this.exitFullscreenMode();
+        } else {
+          this.fullscreenReturnFocus = document.activeElement instanceof HTMLElement
+            ? document.activeElement
+            : winExpandBtn;
+          winContainer.classList.add("fullscreen-mode");
+          terminalAudio.playKeyClick();
+        }
       });
     }
+  }
+
+  exitFullscreenMode() {
+    const winContainer = document.getElementById("terminal-main-window");
+    if (!winContainer?.classList.contains("fullscreen-mode")) return false;
+
+    winContainer.classList.remove("fullscreen-mode");
+    terminalAudio.playKeyClick();
+
+    const returnFocus = this.fullscreenReturnFocus || document.getElementById("win-btn-expand");
+    this.fullscreenReturnFocus = null;
+    if (returnFocus?.isConnected && typeof returnFocus.focus === "function") {
+      returnFocus.focus();
+    }
+    return true;
   }
 
   // ================= EASTER EGGS ================= //

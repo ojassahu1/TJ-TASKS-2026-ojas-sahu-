@@ -24,6 +24,12 @@ body.matrix-green {
   --shadow-glow: 0 0 15px rgba(0, 255, 102, 0.35);
   --danger-color: #ff3366;
   --lead-color: #ffffff;
+  --panel-radius: 4px;
+  --control-radius: 2px;
+  --panel-padding: 16px;
+  --panel-shadow: 0 10px 28px rgba(0, 0, 0, 0.24);
+  --transition-fast: 160ms ease;
+  --focus-outline: 2px solid var(--border-bright);
 }
 
 body.cyber-amber {
@@ -95,6 +101,17 @@ html, body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+:where(button, a, input, select, textarea, [tabindex]):focus-visible {
+  outline: var(--focus-outline);
+  outline-offset: 2px;
+}
+
+#terminal-cli-input:focus-visible,
+#ojas-command-input:focus-visible {
+  outline: var(--focus-outline);
+  outline-offset: 2px;
 }
 
 /* Custom Matrix Scrollbar */
@@ -189,7 +206,7 @@ html, body {
   border: 1px solid var(--border-bright);
   box-shadow: 0 0 25px var(--glow-soft);
   padding: 24px;
-  border-radius: 2px;
+  border-radius: var(--panel-radius);
 }
 
 .boot-header {
@@ -266,8 +283,8 @@ html, body {
   backdrop-filter: blur(8px);
   border: 1px solid var(--border-color);
   padding: 10px 16px;
-  border-radius: 2px;
-  box-shadow: var(--shadow-glow);
+  border-radius: var(--panel-radius);
+  box-shadow: var(--panel-shadow), 0 0 0 1px var(--glow-soft);
 }
 
 .status-left, .status-right {
@@ -321,7 +338,8 @@ html, body {
   font-size: 11px;
   padding: 4px 8px;
   cursor: pointer;
-  border-radius: 1px;
+  border-radius: var(--control-radius);
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
 }
 
 .hacker-select:focus {
@@ -337,8 +355,8 @@ html, body {
   font-size: 11px;
   padding: 4px 10px;
   cursor: pointer;
-  border-radius: 1px;
-  transition: all 0.2s ease;
+  border-radius: var(--control-radius);
+  transition: color var(--transition-fast), border-color var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .toggle-btn:hover {
@@ -354,7 +372,7 @@ html, body {
   backdrop-filter: blur(10px);
   border: 1px solid var(--border-bright);
   box-shadow: 0 0 25px var(--glow-soft), inset 0 0 15px rgba(0, 255, 102, 0.05);
-  border-radius: 3px;
+  border-radius: var(--panel-radius);
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -454,7 +472,7 @@ html, body {
   font-size: 12px;
   padding: 10px 16px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: color var(--transition-fast), background-color var(--transition-fast), text-shadow var(--transition-fast);
   position: relative;
   text-transform: uppercase;
 }
@@ -500,8 +518,8 @@ html, body {
   font-weight: bold;
   padding: 6px 12px;
   cursor: pointer;
-  border-radius: 2px;
-  transition: all 0.2s ease;
+  border-radius: var(--control-radius);
+  transition: color var(--transition-fast), border-color var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
   letter-spacing: 0.5px;
   display: inline-flex;
   align-items: center;
@@ -581,7 +599,8 @@ html, body {
 .profile-avatar-column {
   background: rgba(0, 0, 0, 0.4);
   border: 1px solid var(--border-color);
-  padding: 20px;
+  padding: var(--panel-padding);
+  border-radius: var(--panel-radius);
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -694,7 +713,8 @@ html, body {
   gap: 12px;
   background: rgba(0, 0, 0, 0.3);
   border: 1px solid var(--border-color);
-  padding: 14px;
+  padding: var(--panel-padding);
+  border-radius: var(--panel-radius);
 }
 
 .meta-item {
@@ -758,7 +778,8 @@ html, body {
 .skill-category-box {
   background: rgba(0, 0, 0, 0.3);
   border: 1px solid var(--border-color);
-  padding: 16px;
+  padding: var(--panel-padding);
+  border-radius: var(--panel-radius);
 }
 
 .category-header {
@@ -781,12 +802,14 @@ html, body {
   border: 1px solid rgba(0, 255, 102, 0.15);
   padding: 12px;
   border-radius: 2px;
-  transition: all 0.2s ease;
+  border-radius: var(--control-radius);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
 }
 
 .skill-item-card:hover {
   border-color: var(--border-bright);
-  box-shadow: 0 0 10px var(--glow-soft);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2), 0 0 10px var(--glow-soft);
+  transform: translateY(-1px);
 }
 
 .skill-item-title {
@@ -856,18 +879,18 @@ html, body {
 .project-terminal-card {
   background: rgba(0, 0, 0, 0.45);
   border: 1px solid var(--border-color);
-  padding: 18px;
-  border-radius: 2px;
+  padding: var(--panel-padding);
+  border-radius: var(--panel-radius);
   display: flex;
   flex-direction: column;
   gap: 10px;
   position: relative;
-  transition: all 0.25s ease;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
 }
 
 .project-terminal-card:hover {
   border-color: var(--border-bright);
-  box-shadow: 0 0 15px var(--glow-soft);
+  box-shadow: var(--panel-shadow), 0 0 12px var(--glow-soft);
   transform: translateY(-2px);
 }
 
@@ -949,7 +972,8 @@ html, body {
   font-size: 11px;
   font-weight: bold;
   text-decoration: none;
-  transition: all 0.2s ease;
+  border-radius: var(--control-radius);
+  transition: color var(--transition-fast), border-color var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
 }
 
 .btn-terminal-link:hover {
@@ -957,6 +981,7 @@ html, body {
   border-color: var(--border-bright);
   box-shadow: 0 0 10px var(--glow-color);
   color: #ffffff;
+  transform: translateY(-1px);
 }
 
 /* ---------------- TERMINAL SHELL PANE (04: TERMINAL) ---------------- */
@@ -1013,8 +1038,8 @@ html, body {
 .diag-card {
   background: rgba(0, 0, 0, 0.4);
   border: 1px solid var(--border-color);
-  padding: 16px;
-  border-radius: 2px;
+  padding: var(--panel-padding);
+  border-radius: var(--panel-radius);
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -1061,7 +1086,8 @@ html, body {
 .contact-card {
   background: rgba(0, 0, 0, 0.4);
   border: 1px solid var(--border-color);
-  padding: 18px;
+  padding: var(--panel-padding);
+  border-radius: var(--panel-radius);
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -1336,3 +1362,825 @@ html, body {
   }
 }
 
+/* ====================================================================
+ * OJAS.OS — SYSTEM LAYER
+ * ==================================================================== */
+
+.os-module-badge {
+  min-width: 158px;
+}
+
+.os-command-btn {
+  border: 1px solid var(--border-color);
+  padding: 2px 6px;
+  color: var(--text-accent);
+}
+
+.footer-restart-btn {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-dim);
+  font: inherit;
+  font-size: 10px;
+  padding: 3px 8px;
+  cursor: pointer;
+}
+
+.footer-restart-btn:hover,
+.os-command-btn:hover {
+  border-color: var(--border-bright);
+  color: var(--text-bright);
+  box-shadow: 0 0 8px var(--glow-color);
+}
+
+.project-inspect-btn {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-accent);
+  font: inherit;
+  font-size: 10px;
+  padding: 6px 9px;
+  cursor: pointer;
+}
+
+.project-inspect-btn:hover {
+  color: var(--text-bright);
+  border-color: var(--border-bright);
+  background: var(--glow-soft);
+}
+
+.ojas-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  padding: min(16vh, 140px) 16px 16px;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(8px);
+}
+
+.ojas-overlay.open {
+  display: flex;
+}
+
+.ojas-palette-window {
+  width: min(680px, 100%);
+  overflow: hidden;
+  border: 1px solid var(--border-bright);
+  background: var(--bg-panel-solid);
+  border-radius: var(--panel-radius);
+  box-shadow: var(--panel-shadow), 0 0 18px var(--glow-soft);
+  animation: ojasPaletteIn 0.18s ease-out;
+}
+
+@keyframes ojasPaletteIn {
+  from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.ojas-palette-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 14px;
+  color: var(--text-bright);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.ojas-palette-header kbd {
+  color: var(--text-dim);
+  font: inherit;
+  font-size: 10px;
+}
+
+#ojas-command-input {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--border-color);
+  outline: 0;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--text-bright);
+  font: inherit;
+  font-size: 14px;
+}
+
+#ojas-command-input::placeholder { color: var(--text-dim); }
+
+#ojas-command-results {
+  max-height: min(52vh, 420px);
+  overflow: auto;
+  padding: 6px;
+}
+
+.ojas-command-result {
+  width: 100%;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 18px;
+  border: 0;
+  border-left: 2px solid transparent;
+  padding: 10px 12px;
+  background: transparent;
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 12px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ojas-command-result small { color: var(--text-dim); font-size: 10px; }
+
+.ojas-command-result:hover,
+.ojas-command-result.active {
+  border-left-color: var(--border-bright);
+  background: var(--glow-soft);
+  color: var(--text-bright);
+}
+
+.ojas-command-empty {
+  padding: 18px 14px;
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+.ojas-palette-hint {
+  margin: 0;
+  padding: 8px 14px;
+  border-top: 1px solid var(--border-color);
+  color: var(--text-dim);
+  font-size: 10px;
+}
+
+.ojas-notification {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 3100;
+  display: grid;
+  gap: 3px;
+  max-width: min(350px, calc(100vw - 36px));
+  padding: 10px 14px;
+  border: 1px solid var(--border-bright);
+  background: var(--bg-panel-solid);
+  color: var(--text-bright);
+  box-shadow: 0 0 18px var(--glow-soft);
+  font-size: 11px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.ojas-notification strong { color: var(--text-accent); font-size: 10px; letter-spacing: 0.8px; }
+.ojas-notification.show { opacity: 1; transform: translateY(0); }
+
+body.os-mode-minimal #matrix-canvas { opacity: 0.12; }
+body.os-mode-minimal #crt-overlay { opacity: 0; }
+body.os-mode-void #matrix-canvas { opacity: 0.3; filter: hue-rotate(92deg) contrast(1.25); }
+body.os-mode-terminal .terminal-content-area { background: rgba(0, 0, 0, 0.18); }
+body.ojas-scan-active #terminal-main-window { animation: ojasSystemScan 1s ease; }
+
+@keyframes ojasSystemScan {
+  0%, 100% { filter: none; }
+  30% { filter: brightness(1.45) saturate(0.7); }
+  55% { filter: contrast(1.25) brightness(0.85); }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 720px) {
+  .os-module-badge { display: none; }
+  #os-mode-select,
+  label[for="os-mode-select"] { display: none; }
+  .ojas-overlay { padding-top: 8vh; }
+  .ojas-command-result { align-items: flex-start; flex-direction: column; gap: 2px; }
+  .ojas-notification { right: 10px; bottom: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ojas-palette-window,
+  body.ojas-scan-active #terminal-main-window { animation: none !important; }
+  .ojas-notification { transition: none; }
+}
+
+
+/* ====================================================================
+ * OVER-ENGINEERED 3D SCIENTIFIC CALCULATOR — STYLES
+ * ====================================================================
+ * Extends the existing Matrix Terminal design system.
+ * Uses the same CSS variables (--border-bright, --text-primary, etc.)
+ * so all 4 themes (green, amber, cyan, red) apply automatically.
+ */
+
+/* ── Tab highlight: the calc tab glows differently ── */
+.calc-tab-highlight {
+  border-left: 2px solid var(--border-bright) !important;
+  color: var(--text-accent) !important;
+}
+.calc-tab-highlight.active {
+  background: rgba(0, 255, 102, 0.12) !important;
+}
+
+/* ── Outer wrapper: provides 3D perspective context ── */
+.calc-outer-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 8px 0 24px;
+}
+
+/* ── Scene: the 3D perspective stage ── */
+.calc-scene {
+  perspective: 900px;
+  perspective-origin: 50% 40%;
+  display: inline-block;
+  width: 100%;
+  max-width: 460px;
+}
+
+/* ── The floating card ── */
+.calc-card {
+  position: relative;
+  background: linear-gradient(165deg, rgba(5, 18, 8, 0.97) 0%, rgba(2, 8, 4, 0.99) 100%);
+  border: 1px solid var(--border-bright);
+  box-shadow:
+    0 0 14px var(--glow-soft),
+    inset 0 0 16px rgba(0, 255, 102, 0.035),
+    0 16px 36px rgba(0,0,0,0.42);
+  border-radius: var(--panel-radius);
+  transform-style: preserve-3d;
+  transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+
+.calc-card:hover {
+  box-shadow:
+    0 0 18px var(--glow-soft),
+    inset 0 0 18px rgba(0, 255, 102, 0.045),
+    0 18px 38px rgba(0,0,0,0.46);
+}
+
+/* Subtle depth "face" on the bottom edge */
+.calc-card::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 6px;
+  right: 6px;
+  height: 6px;
+  background: rgba(0, 255, 102, 0.12);
+  border-radius: 0 0 3px 3px;
+  filter: blur(3px);
+  transform: translateZ(-4px);
+}
+
+/* ── Header bar (brand + mode buttons) ── */
+.calc-header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px 8px;
+  border-bottom: 1px solid var(--border-color);
+  background: rgba(0,0,0,0.3);
+}
+
+.calc-brand {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text-bright);
+  letter-spacing: 1.5px;
+  text-shadow: 0 0 8px var(--glow-color);
+}
+
+.calc-ver {
+  font-size: 10px;
+  font-weight: 400;
+}
+
+.calc-mode-group {
+  display: flex;
+  gap: 4px;
+}
+
+.calc-mode-btn {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-dim);
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 3px 8px;
+  cursor: pointer;
+  border-radius: var(--control-radius);
+  transition: color var(--transition-fast), border-color var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.calc-mode-btn.active,
+.calc-mode-btn:hover {
+  border-color: var(--border-bright);
+  color: var(--text-bright);
+  background: var(--glow-soft);
+  box-shadow: 0 0 6px var(--glow-soft);
+}
+
+/* ── Display ── */
+.calc-display {
+  padding: 16px 16px 10px;
+  background: rgba(0,0,0,0.5);
+  border-bottom: 1px solid var(--border-color);
+  text-align: right;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle horizontal scanline across display */
+.calc-display::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 3px,
+    rgba(0,0,0,0.18) 3px, rgba(0,0,0,0.18) 4px
+  );
+  pointer-events: none;
+}
+
+.calc-expr-line {
+  font-size: 11px;
+  color: var(--text-dim);
+  min-height: 16px;
+  word-break: break-all;
+  padding-right: 2px;
+}
+
+.calc-result-line {
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--text-bright);
+  text-shadow: 0 0 10px var(--glow-color);
+  word-break: break-all;
+  line-height: 1.1;
+  transition: color 0.15s ease;
+}
+
+/* Result pop animation */
+.calc-result-pop {
+  animation: resultPop 0.25s ease-out;
+}
+
+@keyframes resultPop {
+  0%   { transform: scale(1.06); color: var(--text-accent); }
+  100% { transform: scale(1);    color: var(--text-bright); }
+}
+
+/* Easter egg flash */
+.calc-easter-flash {
+  animation: easterFlash 2.2s ease;
+  color: var(--text-accent) !important;
+  text-shadow: 0 0 20px var(--glow-color) !important;
+}
+
+@keyframes easterFlash {
+  0%,100% { opacity: 1; }
+  20%      { opacity: 0.6; }
+  40%      { opacity: 1; }
+}
+
+/* Reset flash */
+.calc-reset-flash {
+  animation: resetFlash 0.3s ease;
+}
+
+@keyframes resetFlash {
+  0% { opacity: 0.3; }
+  100% { opacity: 1; }
+}
+
+/* ── Keypad ── */
+.calc-keypad {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  padding: 12px;
+}
+
+.calc-keypad-divider {
+  grid-column: 1 / -1;
+  height: 1px;
+  background: var(--border-color);
+  margin: 2px 0;
+}
+
+/* ── Buttons ── */
+.calc-btn {
+  position: relative;
+  background: rgba(0, 255, 102, 0.04);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 6px;
+  cursor: pointer;
+  border-radius: var(--control-radius);
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), transform 100ms ease, box-shadow var(--transition-fast);
+  user-select: none;
+  outline: none;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* 3D depth face — lower edge */
+  box-shadow: 0 3px 0 rgba(0, 255, 102, 0.15);
+}
+
+.calc-btn:hover {
+  background: var(--glow-soft);
+  border-color: var(--border-bright);
+  color: var(--text-bright);
+  box-shadow: 0 3px 0 var(--border-bright), 0 0 10px var(--glow-soft);
+  z-index: 1;
+}
+
+.calc-btn:focus-visible {
+  outline: 2px solid var(--border-bright);
+  outline-offset: 1px;
+}
+
+/* Press / depth animation — button appears to sink into the calculator */
+.calc-btn.pressed,
+.calc-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--border-bright);
+  background: rgba(0, 255, 102, 0.15);
+}
+
+/* Scientific buttons */
+.calc-btn.sci {
+  font-size: 12px;
+  color: var(--text-dim);
+  background: rgba(0,0,0,0.3);
+}
+.calc-btn.sci:hover {
+  color: var(--text-bright);
+}
+
+/* Constant buttons (π, e) */
+.calc-btn.const {
+  color: var(--text-accent);
+  border-color: rgba(0, 255, 102, 0.3);
+}
+
+/* Number buttons */
+.calc-btn.num {
+  background: rgba(0, 255, 102, 0.07);
+  color: var(--text-bright);
+  font-size: 16px;
+}
+.calc-btn.num:hover {
+  background: rgba(0, 255, 102, 0.18);
+}
+
+/* Operator buttons */
+.calc-btn.op {
+  background: rgba(0, 255, 102, 0.1);
+  border-color: rgba(0, 255, 102, 0.3);
+  color: var(--text-accent);
+  font-size: 18px;
+  font-weight: 700;
+}
+.calc-btn.op:hover {
+  background: rgba(0, 255, 102, 0.25);
+  color: var(--text-bright);
+}
+
+/* Equals button — spans 2 rows implicitly via grid positioning */
+.calc-btn.eq {
+  background: var(--border-bright);
+  border-color: var(--border-bright);
+  color: #000;
+  font-size: 20px;
+  font-weight: 800;
+  grid-row: span 1;
+  box-shadow: 0 4px 0 rgba(0, 180, 60, 0.5), 0 0 20px var(--glow-color);
+}
+.calc-btn.eq:hover {
+  background: var(--text-accent);
+  box-shadow: 0 4px 0 var(--border-bright), 0 0 30px var(--glow-color);
+}
+.calc-btn.eq.pressed,
+.calc-btn.eq:active {
+  background: var(--text-dim);
+  box-shadow: 0 1px 0 var(--border-color), 0 0 10px var(--glow-soft);
+}
+
+/* Wide 2-column button (AC) */
+.calc-btn.wide-2 {
+  grid-column: span 2;
+  background: rgba(255, 51, 102, 0.1);
+  border-color: rgba(255, 51, 102, 0.4);
+  color: #ff3366;
+}
+.calc-btn.wide-2:hover {
+  background: rgba(255, 51, 102, 0.25);
+  border-color: #ff3366;
+  color: #fff;
+  box-shadow: 0 3px 0 #ff3366, 0 0 12px rgba(255, 51, 102, 0.4);
+}
+
+/* ── Error Overlay ── */
+.calc-error-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(2, 4, 2, 0.94);
+  border: 1px solid var(--danger-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 10;
+  border-radius: var(--panel-radius);
+}
+
+.calc-error-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.calc-error-icon {
+  font-size: 28px;
+  color: var(--danger-color);
+  animation: errorPulse 0.8s ease infinite;
+}
+
+@keyframes errorPulse {
+  0%,100% { opacity: 1; }
+  50%      { opacity: 0.4; }
+}
+
+.calc-error-msg {
+  font-size: 14px;
+  color: var(--text-bright);
+  line-height: 1.5;
+  max-width: 320px;
+}
+
+.calc-error-dismiss {
+  background: transparent;
+  border: 1px solid var(--danger-color);
+  color: var(--danger-color);
+  font-family: inherit;
+  font-size: 11px;
+  padding: 5px 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.calc-error-dismiss:hover {
+  background: var(--danger-color);
+  color: #fff;
+}
+
+/* ── Self-Destruct Overlay ── */
+.calc-destruct-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.96);
+  border: 2px solid #ff1744;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px;
+  border-radius: var(--panel-radius);
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  z-index: 20;
+  border-radius: 4px;
+}
+
+.calc-destruct-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+  animation: destructBlink 0.4s ease infinite alternate;
+}
+
+@keyframes destructBlink {
+  from { border-color: #ff1744; box-shadow: 0 0 10px rgba(255,23,68,0.3); }
+  to   { border-color: #ff6b6b; box-shadow: 0 0 30px rgba(255,23,68,0.8); }
+}
+
+.calc-destruct-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: #ff1744;
+  letter-spacing: 1px;
+  text-shadow: 0 0 10px rgba(255,23,68,0.8);
+}
+
+.calc-destruct-count {
+  font-size: 64px;
+  font-weight: 800;
+  color: #ff1744;
+  text-shadow: 0 0 20px rgba(255,23,68,0.9);
+  line-height: 1;
+  animation: destructCount 0.5s ease-out;
+}
+
+@keyframes destructCount {
+  from { transform: scale(1.5); opacity: 0.5; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+.calc-destruct-sub {
+  font-size: 12px;
+  color: #ff6b6b;
+  max-width: 280px;
+  line-height: 1.5;
+}
+
+.calc-destruct-progress {
+  width: 80%;
+  height: 4px;
+  background: rgba(255,23,68,0.2);
+  border: 1px solid rgba(255,23,68,0.4);
+}
+
+.calc-destruct-fill {
+  height: 100%;
+  background: #ff1744;
+  box-shadow: 0 0 8px #ff1744;
+  transition: width 0.9s linear;
+}
+
+/* ── Shake animations ── */
+.calc-shake {
+  animation: shakeHard 0.4s ease-in-out infinite;
+}
+
+.calc-shake-light {
+  animation: shakeLight 0.5s ease-in-out;
+}
+
+@keyframes shakeHard {
+  0%,100% { transform: translate(0,0) rotate(0); }
+  20%     { transform: translate(-5px, 3px) rotate(-1deg); }
+  40%     { transform: translate(5px, -3px) rotate(1deg); }
+  60%     { transform: translate(-4px, 2px) rotate(-0.5deg); }
+  80%     { transform: translate(4px, -2px) rotate(0.5deg); }
+}
+
+@keyframes shakeLight {
+  0%,100% { transform: translate(0,0); }
+  25%     { transform: translate(-3px,2px); }
+  50%     { transform: translate(3px,-2px); }
+  75%     { transform: translate(-2px,1px); }
+}
+
+/* ── Calculation History Panel ── */
+.calc-history-panel {
+  border-top: 1px solid var(--border-color);
+  padding: 10px 12px;
+  max-height: 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.calc-history-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  margin-bottom: 4px;
+}
+
+.calc-history-clear-btn {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-dim);
+  font-family: inherit;
+  font-size: 10px;
+  padding: 2px 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.calc-history-clear-btn:hover {
+  border-color: var(--danger-color);
+  color: var(--danger-color);
+}
+
+.calc-history-list {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.calc-history-entry {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  padding: 4px 6px;
+  border-radius: var(--control-radius);
+  cursor: pointer;
+  transition: background 0.15s ease;
+  flex-wrap: wrap;
+}
+.calc-history-entry:hover {
+  background: var(--glow-soft);
+}
+
+.calc-hist-expr {
+  flex: 1;
+  word-break: break-all;
+}
+
+.calc-hist-result {
+  color: var(--text-bright);
+  font-weight: bold;
+}
+
+.calc-hist-note {
+  width: 100%;
+  font-style: italic;
+  font-size: 10px;
+}
+
+.calc-history-empty {
+  font-size: 11px;
+  padding: 6px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 520px) {
+  .calc-scene { max-width: 100%; }
+
+  .calc-result-line { font-size: 24px; }
+
+  .calc-btn {
+    min-height: 38px;
+    font-size: 12px;
+    padding: 8px 4px;
+  }
+  .calc-btn.num { font-size: 14px; }
+  .calc-btn.op  { font-size: 16px; }
+  .calc-btn.eq  { font-size: 18px; }
+
+  .calc-keypad { gap: 4px; padding: 8px; }
+}
+
+@media (max-width: 360px) {
+  .calc-btn { min-height: 34px; font-size: 11px; }
+  .calc-btn.num { font-size: 13px; }
+  .calc-result-line { font-size: 20px; }
+}
+
+/* ── Reduced-motion overrides ── */
+@media (prefers-reduced-motion: reduce) {
+  .calc-card {
+    animation: none !important;
+    transform: none !important;
+  }
+  .calc-destruct-overlay.active {
+    animation: none !important;
+  }
+  .calc-destruct-count {
+    animation: none !important;
+  }
+  .calc-error-icon {
+    animation: none !important;
+  }
+}

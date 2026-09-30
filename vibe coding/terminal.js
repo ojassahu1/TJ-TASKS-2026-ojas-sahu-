@@ -14,6 +14,7 @@ class CommandTerminal {
     this.historyIndex = -1;
     this.clickCount = 0;
     this.isExecuting = false;
+    this.context = "identity";
 
     // Available commands for auto-complete and dispatch
     this.commands = [
@@ -21,10 +22,22 @@ class CommandTerminal {
       "about",
       "skills",
       "projects",
+      "project",
       "contact",
       "matrix",
+      "cyber",
+      "terminal",
+      "minimal",
+      "void",
+      "calculator",
+      "diagnostics",
+      "status",
+      "scan",
+      "mode",
       "sudo",
       "whoami",
+      "github",
+      "neofetch",
       "clear",
       "coffee",
       "hack",
@@ -65,6 +78,16 @@ class CommandTerminal {
 
     // Display initial boot banner in terminal output
     this.printWelcomeBanner();
+  }
+
+  setContext(module) {
+    this.context = module || "identity";
+    const prompt = document.getElementById("terminal-prompt-label");
+    if (prompt) prompt.textContent = `${this.context}@ojas-os:~$`;
+  }
+
+  getPrompt() {
+    return `${this.context}@ojas-os:~$`;
   }
 
   handleKeyDown(e) {
@@ -135,7 +158,7 @@ class CommandTerminal {
     const args = parts.slice(1);
 
     // Print command line prompt
-    this.printLine(`guest@ojas-matrix:~$ ${commandLine}`, "text-prompt");
+    this.printLine(`${this.getPrompt()} ${commandLine}`, "text-prompt");
 
     switch (cmd) {
       case "help":
@@ -143,24 +166,55 @@ class CommandTerminal {
         break;
       case "about":
         this.cmdAbout();
+        this.openModule("profile");
         break;
       case "skills":
         this.cmdSkills();
+        this.openModule("skills");
         break;
       case "projects":
+      case "project":
         this.cmdProjects(args);
+        if (cmd === "projects" && args.length === 0) this.openModule("projects");
         break;
       case "contact":
         this.cmdContact();
+        this.openModule("contact");
         break;
       case "matrix":
         this.cmdMatrix();
+        break;
+      case "cyber":
+      case "terminal":
+      case "minimal":
+      case "void":
+        this.cmdMode(cmd);
+        break;
+      case "mode":
+        this.cmdMode(args[0]);
+        break;
+      case "calculator":
+      case "diagnostics":
+        this.openModule(cmd === "diagnostics" ? "diagnostics" : cmd);
+        break;
+      case "status":
+        this.cmdStatus();
+        break;
+      case "scan":
+        this.cmdScan();
         break;
       case "sudo":
         this.cmdSudo(args.join(" "));
         break;
       case "whoami":
         this.cmdWhoami();
+        break;
+      case "github":
+        this.cmdGithub();
+        break;
+      case "neofetch":
+        if (window.ojasOS?.showNeofetch) window.ojasOS.showNeofetch();
+        else this.cmdAbout();
         break;
       case "clear":
       case "cls":
@@ -215,15 +269,25 @@ class CommandTerminal {
 │ CORE SYSTEM:                                                    │
 │   about        - View developer profile, background & bio       │
 │   skills       - Inspect technical skill matrix & status tags   │
-│   projects     - Explore production deployments & experiments   │
+│   projects     - List projects; use --search &lt;term&gt; to filter │
+│   calculator   - Open the scientific calculator module         │
+│   diagnostics  - Open simulated profile telemetry               │
+│   status       - Show active module and environment              │
+│   scan         - Run the visual system integrity scan             │
 │   contact      - Display uplink channels, GitHub, and email     │
 │   whoami       - Query active operator identity                 │
+│   github       - Open the developer's GitHub profile            │
+│   neofetch     - Display the OJAS.OS system profile              │
 │                                                                 │
 │ INTERACTIVE HACKS & SIMULATIONS:                                │
-│   matrix       - Trigger overdrive digital rain & screen warp   │
+│   matrix       - Activate Matrix mode and rain overdrive         │
+│   cyber        - Switch to Cyber environment                     │
+│   minimal      - Switch to Minimal environment                   │
+│   void         - Switch to Void environment                      │
+│   mode &lt;name&gt; - Select matrix, cyber, terminal, minimal, void │
 │   hack         - Execute Hollywood-style mainframe attack       │
 │   coffee       - Brew emergency developer espresso [ASCII art]  │
-│   diagnostic   - Run system hardware & caffeine telemetry       │
+│   diagnostic   - Show simulated profile telemetry                │
 │   quote        - Generate wise words from the coding universe   │
 │   sudo <cmd>   - Attempt root access escalation                 │
 │                                                                 │
@@ -276,6 +340,28 @@ class CommandTerminal {
   }
 
   cmdProjects(args) {
+    const option = args?.[0]?.toLowerCase();
+    if (option === "--search" || option === "search") {
+      const query = args.slice(1).join(" ").trim().toLowerCase();
+      if (!query) {
+        this.printLine("Usage: projects --search <name | technology | category>", "text-dim");
+        return;
+      }
+      const matches = PROFILE_DATA.projects.filter((project) => {
+        const searchable = [project.name, project.category, project.description, ...project.techStack].join(" ").toLowerCase();
+        return searchable.includes(query);
+      });
+      if (!matches.length) {
+        this.printLine(`No projects matched "${args.slice(1).join(" ")}".`, "text-dim");
+        return;
+      }
+      this.printLine(`PROJECT SEARCH // ${matches.length} MATCH${matches.length === 1 ? "" : "ES"}`, "text-bright font-bold");
+      matches.forEach((project) => this.printLine(`${project.name} · ${project.category} · ${project.techStack.join(", ")}`, "text-glow"));
+      return;
+    }
+
+    if (option === "--list" || option === "list") args = [];
+
     if (args && args.length > 0) {
       const query = args[0].toLowerCase();
       const proj = PROFILE_DATA.projects.find(
@@ -340,6 +426,7 @@ class CommandTerminal {
   }
 
   cmdMatrix() {
+    window.ojasOS?.setMode?.("matrix");
     terminalAudio.playMatrixWarp();
     if (matrixEngine) {
       matrixEngine.triggerOverdrive(8000);
@@ -353,6 +440,45 @@ Speed boosted by 300%. Character decay threshold randomized.
 "You take the red pill, you stay in Wonderland, and I show you how deep the rabbit hole goes."
 </div>`;
     this.printRaw(text);
+  }
+
+  cmdMode(mode) {
+    const selected = String(mode || "").toLowerCase();
+    const supportedModes = ["matrix", "cyber", "terminal", "minimal", "void"];
+    if (!supportedModes.includes(selected)) {
+      this.printLine(`Usage: mode <${supportedModes.join(" | ")}>`, "text-dim");
+      return;
+    }
+    if (selected === "matrix") {
+      this.cmdMatrix();
+      return;
+    }
+    window.ojasOS?.setMode?.(selected);
+    this.printLine(`${selected.toUpperCase()} ENVIRONMENT ACTIVE.`, "text-glow");
+  }
+
+  openModule(module) {
+    if (window.ojasOS?.openModule) {
+      window.ojasOS.openModule(module);
+      this.printLine(`${module.toUpperCase()} MODULE OPENED.`, "text-glow");
+      return;
+    }
+    this.printLine(`Module unavailable: ${module}`, "text-dim");
+  }
+
+  cmdStatus() {
+    const mode = localStorage.getItem("ojas_os_mode") || "matrix";
+    const module = window.ojasOS?.modules?.[window.ojasOS?.activeModule] || "IDENTITY_CORE";
+    this.printLine(`SYSTEM: ONLINE · MODE: ${mode.toUpperCase()} · MODULE: ${module}`, "text-glow");
+  }
+
+  cmdScan() {
+    if (window.ojasOS?.runScan) {
+      window.ojasOS.runScan();
+      this.printLine("VISUAL SCAN EFFECT COMPLETE · SIMULATION ONLY", "text-glow");
+      return;
+    }
+    this.printLine("System scan unavailable.", "text-dim");
   }
 
   cmdSudo(args) {
@@ -399,6 +525,11 @@ This incident will be reported to Agent Smith.
   <br><span class="text-glow">Access Clearance: OPERATOR / LEVEL-7</span>
 </div>`;
     this.printRaw(text);
+  }
+
+  cmdGithub() {
+    const url = PROFILE_DATA.contact.github;
+    this.printRaw(`<a class="terminal-link" href="${url}" target="_blank" rel="noopener">[OPEN GITHUB PROFILE] ${url}</a>`);
   }
 
   cmdClear() {
@@ -472,7 +603,7 @@ This incident will be reported to Agent Smith.
     const d = PROFILE_DATA.diagnostics;
     const report = `
 <div class="terminal-block">
-  <span class="text-bright font-bold">RUNNING DIAGNOSTIC...</span>
+  <span class="text-bright font-bold">SIMULATED PROFILE TELEMETRY // NOT LIVE DEVICE METRICS</span>
   <br><br>
   Brain:       <span class="text-glow">${d.brain}</span>
   <br>RAM:         <span class="text-bright">${d.ram}</span>
@@ -512,7 +643,19 @@ This incident will be reported to Agent Smith.
 
     const target = themeMap[themeName.toLowerCase()];
     if (target) {
-      document.body.className = target;
+      const modeByTheme = {
+        "matrix-green": "matrix",
+        "cyber-amber": "cyber",
+        "ghost-cyan": "terminal",
+        "blood-red": "void"
+      };
+      if (window.ojasOS?.setMode) {
+        window.ojasOS.setMode(modeByTheme[target]);
+        this.printLine(`Theme switched to: ${themeName.toUpperCase()}`, "text-glow");
+        return;
+      }
+      document.body.classList.remove("matrix-green", "cyber-amber", "ghost-cyan", "blood-red");
+      document.body.classList.add(target);
       if (matrixEngine) matrixEngine.setTheme(target);
       terminalAudio.playAccessGranted();
       this.printLine(`Theme switched to: ${themeName.toUpperCase()}`, "text-glow");
@@ -585,12 +728,13 @@ This incident will be reported to Agent Smith.
 
   cmdUnknown(raw) {
     terminalAudio.playError();
+    const safeRaw = this.escapeHTML(raw);
     const funnyErrors = [
       `ERROR 404:
 Motivation package not found.
 
 Try installing coffee instead.`,
-      `SYNTAX_ERROR: Command '${raw}' not found in Matrix neural registers.
+      `SYNTAX_ERROR: Command '${safeRaw}' not found in Matrix neural registers.
 Type 'help' for authorized protocols.`,
       `KERNEL PANIC: Thought process crashed at address 0xDEADBEEF.
 Have you tried turning your brain off and on again?`

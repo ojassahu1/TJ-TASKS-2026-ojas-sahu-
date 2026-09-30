@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <meta name="description" content="Ojas Sahu - Matrix Developer Terminal & Portfolio. Futuristic cyberpunk bio-card with interactive CLI, digital rain, and reactive developer systems.">
+  <meta name="description" content="OJAS.OS — an interactive developer operating system for Ojas Sahu, with a command palette, terminal modules, digital rain, and a scientific calculator.">
   <meta name="author" content="Ojas Sahu">
   <meta name="theme-color" content="#020603">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23020603'/%3E%3Ctext x='3' y='13' fill='%2300ff66'%3EO%3C/text%3E%3C/svg%3E">
   
-  <title>SYSTEM://OJAS-SAHU // MATRIX TERMINAL</title>
+  <title>OJAS.OS // DEVELOPER OPERATING SYSTEM</title>
 
   <!-- Google Font: JetBrains Mono for authentic monospace terminal typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,10 +29,10 @@
   <!-- ================= BOOT SEQUENCE MODAL OVERLAY ================= -->
   <aside id="boot-overlay" role="dialog" aria-modal="true" aria-label="Terminal Boot Sequence">
     <div class="boot-terminal-box">
-      <div class="boot-header">> NEURAL_KERNEL_LOADER v4.09.26 // SECURE BOOT</div>
+      <div class="boot-header">> OJAS.OS KERNEL v4.09.26 // SECURE BOOT</div>
       <div id="boot-log" aria-live="polite"></div>
       <div class="boot-skip-container">
-        <button id="skip-boot-btn" aria-label="Skip terminal initialization">[ PRESS ESC OR CLICK TO SKIP ]</button>
+        <button id="skip-boot-btn" aria-label="Skip OJAS.OS initialization">[ SKIP BOOT / ESC ]</button>
       </div>
     </div>
   </aside>
@@ -43,7 +44,7 @@
     <header class="matrix-status-bar" role="banner">
       <div class="status-left">
         <span class="status-indicator" aria-hidden="true"></span>
-        <span class="sys-node-tag">SYSTEM://OJAS-SAHU/BIO-CORE</span>
+        <span class="sys-node-tag">OJAS.OS // DEVELOPER_CORE</span>
         <span class="sys-telemetry-badge">
           <span>TIME:</span>
           <span id="telemetry-time" class="text-bright">--:--:-- IST</span>
@@ -51,6 +52,10 @@
         <span class="sys-telemetry-badge">
           <span>UPTIME:</span>
           <span id="telemetry-uptime" class="text-bright">00:00:00</span>
+        </span>
+        <span class="sys-telemetry-badge os-module-badge">
+          <span>MODULE:</span>
+          <span id="os-active-module" class="text-bright">IDENTITY</span>
         </span>
       </div>
 
@@ -62,6 +67,15 @@
             <option value="cyber-amber">CYBER AMBER</option>
             <option value="ghost-cyan">GHOST CYAN</option>
             <option value="blood-red">BLOOD RED</option>
+          </select>
+
+          <label for="os-mode-select" class="sys-telemetry-badge">MODE:</label>
+          <select id="os-mode-select" class="hacker-select" aria-label="Select OJAS.OS environment mode">
+            <option value="matrix">MATRIX</option>
+            <option value="cyber">CYBER</option>
+            <option value="terminal">TERMINAL</option>
+            <option value="minimal">MINIMAL</option>
+            <option value="void">VOID</option>
           </select>
 
           <button id="audio-toggle-btn" class="toggle-btn" aria-label="Toggle retro mechanical terminal sound">AUDIO: OFF</button>
@@ -79,23 +93,25 @@
           <span class="win-dot red" title="Close Node"></span>
           <span class="win-dot yellow" title="Sleep Node"></span>
           <span class="win-dot green" title="Maximize Node"></span>
-          <span class="terminal-title-text">OJAS_SAHU@NEURAL-MATRIX: ~/portfolio</span>
+          <span class="terminal-title-text">ojas@OJAS.OS: ~/developer-core</span>
         </div>
         <div class="titlebar-right">
           <span>PID: 4096</span>
-          <span>HOST: MATRIX-CORE</span>
+          <span>HOST: OJAS-CORE</span>
+          <button id="open-command-palette" class="win-btn os-command-btn" title="Open command palette (Ctrl+K or /)">[COMMAND]</button>
           <button id="win-btn-expand" class="win-btn" title="Toggle Fullscreen Frame">[⛶]</button>
         </div>
       </div>
 
       <!-- Navigation Tabs -->
       <nav class="terminal-tabs" role="tablist" aria-label="Portfolio Sections">
-        <button class="nav-tab-btn active" data-tab="profile" role="tab" aria-selected="true" aria-controls="pane-profile">[ 01: PROFILE ]</button>
-        <button class="nav-tab-btn" data-tab="skills" role="tab" aria-selected="false" aria-controls="pane-skills">[ 02: SKILLS ]</button>
-        <button class="nav-tab-btn" data-tab="projects" role="tab" aria-selected="false" aria-controls="pane-projects">[ 03: PROJECTS ]</button>
-        <button class="nav-tab-btn" data-tab="terminal" role="tab" aria-selected="false" aria-controls="pane-terminal">[ 04: TERMINAL CLI ]</button>
-        <button class="nav-tab-btn" data-tab="diagnostics" role="tab" aria-selected="false" aria-controls="pane-diagnostics">[ 05: DIAGNOSTICS ]</button>
-        <button class="nav-tab-btn" data-tab="contact" role="tab" aria-selected="false" aria-controls="pane-contact">[ 06: CONTACT ]</button>
+        <button id="tab-profile" class="nav-tab-btn active" data-tab="profile" role="tab" aria-selected="true" aria-controls="pane-profile">[ 01: PROFILE ]</button>
+        <button id="tab-skills" class="nav-tab-btn" data-tab="skills" role="tab" aria-selected="false" aria-controls="pane-skills">[ 02: SKILLS ]</button>
+        <button id="tab-projects" class="nav-tab-btn" data-tab="projects" role="tab" aria-selected="false" aria-controls="pane-projects">[ 03: PROJECTS ]</button>
+        <button id="tab-terminal" class="nav-tab-btn" data-tab="terminal" role="tab" aria-selected="false" aria-controls="pane-terminal">[ 04: TERMINAL CLI ]</button>
+        <button id="tab-diagnostics" class="nav-tab-btn" data-tab="diagnostics" role="tab" aria-selected="false" aria-controls="pane-diagnostics">[ 05: DIAGNOSTICS ]</button>
+        <button id="tab-contact" class="nav-tab-btn" data-tab="contact" role="tab" aria-selected="false" aria-controls="pane-contact">[ 06: CONTACT ]</button>
+        <button id="tab-calculator" class="nav-tab-btn calc-tab-highlight" data-tab="calculator" role="tab" aria-selected="false" aria-controls="pane-calculator">[ 07: QUANTUM CALC ]</button>
       </nav>
 
       <!-- Interactive Quick Action Button Bar -->
@@ -229,7 +245,7 @@
               <!-- Command output is dynamically logged here -->
             </div>
             <div class="terminal-input-row">
-              <label for="terminal-cli-input" class="terminal-prompt-label">guest@ojas-matrix:~$</label>
+              <label for="terminal-cli-input" id="terminal-prompt-label" class="terminal-prompt-label">identity@ojas-os:~$</label>
               <input 
                 type="text" 
                 id="terminal-cli-input" 
@@ -247,7 +263,7 @@
         <!-- ================= PANE 05: DIAGNOSTICS ================= -->
         <section id="pane-diagnostics" class="terminal-pane" role="tabpanel" aria-labelledby="tab-diagnostics">
           <div style="margin-bottom: 16px;">
-            <span class="text-dim">> REAL-TIME HARDWARE, NEURAL RUNTIME & CAFFEINE METRICS:</span>
+            <span class="text-dim">> SIMULATED PROFILE TELEMETRY // NOT LIVE DEVICE METRICS:</span>
           </div>
           <div id="diagnostics-container">
             <!-- Dynamically populated from data.js -->
@@ -294,6 +310,15 @@
           </div>
         </section>
 
+        <!-- ================= PANE 07: QUANTUM SCIENTIFIC CALCULATOR ================= -->
+        <section id="pane-calculator" class="terminal-pane" role="tabpanel" aria-labelledby="tab-calculator">
+          <div class="calc-pane-intro" style="margin-bottom: 12px;">
+            <span class="text-dim">> LOADING MODULE: OVER-ENGINEERED QUANTUM CALCULATOR v9.∞ // NO EVAL() WAS HARMED.</span>
+          </div>
+          <!-- Calculator mounts here via calculator.js -->
+          <div id="calc-container"></div>
+        </section>
+
       </div>
     </main>
 
@@ -309,6 +334,7 @@
       <div class="footer-right">
         <span>COORDINATES: 20.59° N, 78.96° E (INDIA)</span>
       </div>
+      <button id="restart-ojas-os" class="footer-restart-btn">[ RESTART OJAS.OS ]</button>
     </footer>
 
   </div>
@@ -324,6 +350,22 @@
     </div>
   </aside>
 
+  <!-- ================= GLOBAL OJAS.OS COMMAND PALETTE ================= -->
+  <aside id="ojas-command-palette" class="ojas-overlay" role="dialog" aria-modal="true" aria-labelledby="command-palette-title" aria-hidden="true">
+    <div class="ojas-palette-window">
+      <div class="ojas-palette-header">
+        <span id="command-palette-title">OJAS.OS // GLOBAL COMMAND</span>
+        <kbd>ESC</kbd>
+      </div>
+      <label class="sr-only" for="ojas-command-input">Search modules or enter a command</label>
+      <input id="ojas-command-input" type="text" autocomplete="off" spellcheck="false" placeholder="Search modules, modes, and system commands...">
+      <div id="ojas-command-results" role="listbox" aria-label="Command suggestions"></div>
+      <p class="ojas-palette-hint">↑ ↓ to navigate · Enter to run · Esc to close</p>
+    </div>
+  </aside>
+
+  <div id="ojas-notification" class="ojas-notification" role="status" aria-live="polite" aria-atomic="true"></div>
+
   <!-- ================= MODULAR JAVASCRIPT ARCHITECTURE ================= -->
   <!-- 1. Central Profile Data Configuration -->
   <script src="data.js"></script>
@@ -335,6 +377,12 @@
   <script src="terminal.js"></script>
   <!-- 5. Core Application Coordinator & Event Bindings -->
   <script src="app.js"></script>
+  <!-- 6. Scientific Calculator Expression Engine (shunting-yard, no eval) -->
+  <script src="calculator-engine.js"></script>
+  <!-- 7. Over-Engineered 3D Scientific Calculator UI -->
+  <script src="calculator.js"></script>
+  <!-- 8. OJAS.OS state, command palette, modes, notifications -->
+  <script src="os.js"></script>
 
 </body>
 </html>
