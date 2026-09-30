@@ -1,26 +1,8 @@
-/**
- * The Forge Gym — Interactive & Responsive Enhancements
- * 
- * Features:
- * 1. Responsive Mobile Navigation Drawer (close on click, overlay, ESC, resize)
- * 2. Animated Hamburger Icon (transforms into 'X')
- * 3. Sticky Navbar Elevation on Scroll
- * 4. ScrollSpy (Active Navigation Link Highlighting)
- * 5. Smooth Scrolling with Fixed Header Offset
- * 6. Animated Statistics Counter (IntersectionObserver)
- * 7. Pricing Toggle (Monthly vs. Annual with 20% discount)
- * 8. Responsive Gallery Lightbox with Keyboard & Touch/Swipe Support
- * 9. Interactive Booking / Trial Pass Modal with Form Validation
- * 10. Scroll-to-Top Floating Button
- * 11. Subtle Scroll-Reveal Animations (Respects prefers-reduced-motion)
- */
 
 document.addEventListener('DOMContentLoaded', () => {
   'use strict';
 
-  // ==========================================================
-  // 1. RESPONSIVE MOBILE NAVIGATION DRAWER
-  // ==========================================================
+ 
   const navToggle = document.getElementById('nav-toggle');
   const navBurger = document.querySelector('.nav-burger');
   const navLinks = document.querySelector('.nav-links');
@@ -51,12 +33,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Close nav on overlay click
+
   if (navOverlay) {
     navOverlay.addEventListener('click', closeMobileNav);
   }
 
-  // Close nav when clicking any nav link (critical mobile UX fix)
+
   if (navLinks) {
     const links = navLinks.querySelectorAll('a');
     links.forEach(link => {
@@ -68,14 +50,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Close nav on Escape key
+  
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && navToggle && navToggle.checked) {
       closeMobileNav();
     }
   });
 
-  // Automatically reset menu state if window is resized past mobile breakpoint
   window.addEventListener('resize', () => {
     if (window.innerWidth > 700 && navToggle && navToggle.checked) {
       closeMobileNav();
@@ -83,9 +64,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 
-  // ==========================================================
-  // 2. STICKY NAVBAR SCROLL ELEVATION
-  // ==========================================================
   const handleNavScroll = () => {
     if (!header) return;
     if (window.scrollY > 40) {
@@ -99,9 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
   handleNavScroll();
 
 
-  // ==========================================================
-  // 3. SCROLLSPY (ACTIVE NAV LINK HIGHLIGHTING)
-  // ==========================================================
+  
   const sections = document.querySelectorAll('section[id]');
   const allNavAnchors = document.querySelectorAll('.nav-links a[href^="#"]');
 
@@ -128,9 +104,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
-  // ==========================================================
-  // 4. ANIMATED STATS COUNTER
-  // ==========================================================
   const statNumbers = document.querySelectorAll('.stat-num');
   let hasAnimatedStats = false;
 
@@ -152,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const elapsed = currentTime - startTime;
         const progress = Math.min(elapsed / duration, 1);
         
-        // Ease-out expo curve for satisfying deceleration
+        
         const easeOut = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
         const currentValue = Math.floor(easeOut * targetValue);
 
@@ -184,9 +157,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
-  // ==========================================================
-  // 5. INTERACTIVE PRICING TOGGLE (MONTHLY VS YEARLY)
-  // ==========================================================
   const pricingToggleBtn = document.getElementById('billing-toggle');
   const planCards = document.querySelectorAll('.pricing-grid .plan');
 
@@ -234,10 +204,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-
-  // ==========================================================
-  // 6. RESPONSIVE GALLERY LIGHTBOX MODAL
-  // ==========================================================
   const galleryItems = document.querySelectorAll('.gallery-grid a');
   const lightboxModal = document.getElementById('lightbox-modal');
   const lightboxImg = document.getElementById('lightbox-img');
@@ -348,9 +314,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
-  // ==========================================================
+  
   // 7. INTERACTIVE BOOKING / MEMBERSHIP MODAL
-  // ==========================================================
+  
   const bookingModal = document.getElementById('booking-modal');
   const bookingModalClose = document.getElementById('booking-modal-close');
   const bookingForm = document.getElementById('booking-form');
@@ -443,9 +409,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
-  // ==========================================================
+
   // 8. SCROLL-TO-TOP BUTTON
-  // ==========================================================
+
   const backToTopBtn = document.getElementById('back-to-top');
 
   if (backToTopBtn) {
@@ -466,9 +432,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
-  // ==========================================================
-  // 9. SUBTLE SCROLL-REVEAL ANIMATIONS
-  // ==========================================================
+
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   if (!prefersReducedMotion && 'IntersectionObserver' in window) {
@@ -493,3 +457,6 @@ document.addEventListener('DOMContentLoaded', () => {
     revealTargets.forEach(el => revealObserver.observe(el));
   }
 });
+
+
+
