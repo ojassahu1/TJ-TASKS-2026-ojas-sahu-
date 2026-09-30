@@ -6,4 +6,8 @@ document.body.style.backgroundColor = "green";
 
 console.log("hello  ");
 
-document.body.childNodes()
+console.log("Hello world")
+
+document.body.firstElementChild 
+document.body.firstElementChild.childNodes 
+document.body.firstElementChild.children[2]
