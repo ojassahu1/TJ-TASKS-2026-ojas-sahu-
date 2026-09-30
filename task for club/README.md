@@ -56,4 +56,4 @@ AI tools were used during the development process for guidance, improving respon
 
 ## Live Project
 
-[View the deployed website](https://tj-tasks-2026-ojas-sahu.vercel.app)
+[View the deployed website](tj-task-2026-ojas-sahu.vercel.app)
