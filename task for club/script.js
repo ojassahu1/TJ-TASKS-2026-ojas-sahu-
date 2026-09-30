@@ -1,8 +1,6 @@
-
 document.addEventListener('DOMContentLoaded', () => {
   'use strict';
 
- 
   const navToggle = document.getElementById('nav-toggle');
   const navBurger = document.querySelector('.nav-burger');
   const navLinks = document.querySelector('.nav-links');
@@ -33,11 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-
   if (navOverlay) {
     navOverlay.addEventListener('click', closeMobileNav);
   }
-
 
   if (navLinks) {
     const links = navLinks.querySelectorAll('a');
@@ -50,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && navToggle && navToggle.checked) {
       closeMobileNav();
@@ -62,7 +57,6 @@ document.addEventListener('DOMContentLoaded', () => {
       closeMobileNav();
     }
   });
-
 
   const handleNavScroll = () => {
     if (!header) return;
@@ -76,8 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('scroll', handleNavScroll, { passive: true });
   handleNavScroll();
 
-
-  
   const sections = document.querySelectorAll('section[id]');
   const allNavAnchors = document.querySelectorAll('.nav-links a[href^="#"]');
 
@@ -103,7 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
     sections.forEach(sec => scrollSpyObserver.observe(sec));
   }
 
-
   const statNumbers = document.querySelectorAll('.stat-num');
   let hasAnimatedStats = false;
 
@@ -118,14 +109,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (isNaN(targetValue)) return;
 
-      const duration = 1600; // ms
+      const duration = 1600;
       const startTime = performance.now();
 
       function updateCounter(currentTime) {
         const elapsed = currentTime - startTime;
         const progress = Math.min(elapsed / duration, 1);
-        
-        
         const easeOut = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
         const currentValue = Math.floor(easeOut * targetValue);
 
@@ -155,7 +144,6 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     animateCounters();
   }
-
 
   const pricingToggleBtn = document.getElementById('billing-toggle');
   const planCards = document.querySelectorAll('.pricing-grid .plan');
@@ -192,7 +180,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const priceEl = card.querySelector('.plan-price');
         const cycleEl = card.querySelector('.plan-cycle');
         if (priceEl && currentTier[index]) {
-          // Smooth swap animation
           priceEl.classList.add('price-fade');
           setTimeout(() => {
             priceEl.innerHTML = `${currentTier[index].price}<span>${currentTier[index].period}</span>`;
@@ -233,8 +220,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function showLightboxImage(idx) {
     if (!lightboxImg || galleryImagesList.length === 0) return;
-    
-    // Boundary wrap
     if (idx < 0) idx = galleryImagesList.length - 1;
     if (idx >= galleryImagesList.length) idx = 0;
     currentGalleryIndex = idx;
@@ -279,7 +264,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Keyboard navigation for lightbox
   document.addEventListener('keydown', (e) => {
     if (!lightboxModal || !lightboxModal.classList.contains('is-active')) return;
     if (e.key === 'Escape') closeLightbox();
@@ -287,7 +271,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'ArrowRight') showLightboxImage(currentGalleryIndex + 1);
   });
 
-  // Touch Swipe for mobile devices
   let touchStartX = 0;
   let touchEndX = 0;
 
@@ -306,17 +289,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const diff = touchEndX - touchStartX;
     if (Math.abs(diff) > 45) {
       if (diff > 0) {
-        showLightboxImage(currentGalleryIndex - 1); // Swipe Right -> Prev
+        showLightboxImage(currentGalleryIndex - 1);
       } else {
-        showLightboxImage(currentGalleryIndex + 1); // Swipe Left -> Next
+        showLightboxImage(currentGalleryIndex + 1);
       }
     }
   }
 
-
-  
-  // 7. INTERACTIVE BOOKING / MEMBERSHIP MODAL
-  
   const bookingModal = document.getElementById('booking-modal');
   const bookingModalClose = document.getElementById('booking-modal-close');
   const bookingForm = document.getElementById('booking-form');
@@ -327,10 +306,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function openBookingModal(planName = 'Free Day Pass') {
     if (!bookingModal) return;
-    
+
     if (modalTitle) {
-      modalTitle.textContent = planName === 'Free Day Pass' 
-        ? 'Book Your Free Gym Session' 
+      modalTitle.textContent = planName === 'Free Day Pass'
+        ? 'Book Your Free Gym Session'
         : `Start Your ${planName} Plan`;
     }
 
@@ -356,7 +335,6 @@ document.addEventListener('DOMContentLoaded', () => {
     bookingModal.setAttribute('aria-hidden', 'true');
   }
 
-  // Attach to all CTA buttons that open the booking modal
   document.querySelectorAll('[data-open-modal]').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
@@ -382,15 +360,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Handle Form Submission with instant visual confirmation
   if (bookingForm) {
     bookingForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
       const nameInput = document.getElementById('booking-name');
-      const phoneInput = document.getElementById('booking-phone');
       const planVal = planSelectInput ? planSelectInput.value : 'Pass';
-
       const userName = nameInput && nameInput.value ? nameInput.value.trim() : 'Athlete';
 
       const successName = document.getElementById('success-user-name');
@@ -407,10 +382,6 @@ document.addEventListener('DOMContentLoaded', () => {
       bookingForm.reset();
     });
   }
-
-
-
-  // 8. SCROLL-TO-TOP BUTTON
 
   const backToTopBtn = document.getElementById('back-to-top');
 
@@ -430,8 +401,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   }
-
-
 
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -457,6 +426,3 @@ document.addEventListener('DOMContentLoaded', () => {
     revealTargets.forEach(el => revealObserver.observe(el));
   }
 });
-
-
-
