@@ -25,23 +25,73 @@ class TerminalAudio {
       if (AudioCtx) {
         this.ctx = new AudioCtx();
         this.masterGain = this.ctx.createGain();
-        this.masterGain.gain.setValueAtTime(0.12, this.ctx.currentTime);
+        this.masterGain.gain.value = 0.24;
         this.masterGain.connect(this.ctx.destination);
       }
     }
     if (this.ctx && this.ctx.state === "suspended") {
-      this.ctx.resume();
+      this.ctx.resume().catch(() => {});
     }
+    return this.ctx;
   }
 
   toggle() {
-    this.enabled = !this.enabled;
-    localStorage.setItem("matrix_terminal_audio", this.enabled);
+    return this.setEnabled(!this.enabled);
+  }
+
+  setEnabled(enabled) {
+    this.enabled = Boolean(enabled);
+    localStorage.setItem("matrix_terminal_audio", String(this.enabled));
+    const button = document.getElementById("audio-toggle-btn");
+    if (button) {
+      button.textContent = this.enabled ? "AUDIO: ON" : "AUDIO: OFF";
+      button.setAttribute("aria-pressed", String(this.enabled));
+    }
     if (this.enabled) {
       this.ensureContext();
+      if (this.masterGain) this.masterGain.gain.value = 0.24;
       this.playAccessGranted();
+    } else if (this.ctx && this.masterGain) {
+      this.masterGain.gain.value = 0;
     }
     return this.enabled;
+  }
+
+  playEasterEgg(name) {
+    if (!this.enabled) return;
+    this.ensureContext();
+    if (!this.ctx) return;
+
+    const cues = {
+      konami: { type: "triangle", notes: [[392, 0], [523, 0.07], [659, 0.14], [1047, 0.23]] },
+      "click-hunt": { type: "sine", notes: [[880, 0], [659, 0.09], [523, 0.18]] },
+      "terminal-click": { type: "square", notes: [[1175, 0], [1568, 0.07], [880, 0.16]] },
+      "terminal-secret": { type: "square", notes: [[1568, 0], [784, 0.045], [1175, 0.1], [523, 0.17]] },
+      calculator: { type: "triangle", notes: [[659, 0], [784, 0.08], [1245, 0.16], [1109, 0.25]] },
+      coffee: { type: "sine", notes: [[330, 0], [494, 0.1], [392, 0.21]] },
+      "hire-me": { type: "triangle", notes: [[440, 0], [554, 0.08], [659, 0.16]] },
+      "red-pill": { type: "sawtooth", notes: [[196, 0], [392, 0.12], [784, 0.24]] },
+      "blue-pill": { type: "sine", notes: [[587, 0], [554, 0.12], [440, 0.24]] },
+      "self-destruct": { type: "square", notes: [[220, 0], [220, 0.14], [165, 0.28]] },
+      "self-destruct-impact": { type: "sawtooth", notes: [[110, 0], [73, 0.08], [55, 0.16]] }
+    };
+    const cue = cues[name];
+    if (!cue) return;
+
+    const now = this.ctx.currentTime;
+    cue.notes.forEach(([frequency, offset]) => {
+      const start = now + offset;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = cue.type;
+      osc.frequency.setValueAtTime(frequency, start);
+      gain.gain.setValueAtTime(0.055, start);
+      gain.gain.exponentialRampToValueAtTime(0.001, start + 0.12);
+      osc.connect(gain);
+      gain.connect(this.masterGain);
+      osc.start(start);
+      osc.stop(start + 0.13);
+    });
   }
 
   // Short mechanical key click

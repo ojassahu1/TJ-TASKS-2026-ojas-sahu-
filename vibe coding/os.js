@@ -11,6 +11,7 @@ class OjasOS {
     this.activeIndex = 0;
     this.returnFocus = null;
     this.modeKey = 'ojas_os_mode';
+    this.themeKey = 'ojas_os_theme';
     this.visitKey = 'ojas_os_modules';
     this.toastTimer = null;
     this.modules = {
@@ -44,7 +45,10 @@ class OjasOS {
     ];
     this.cacheElements();
     this.bindEvents();
-    this.setMode(localStorage.getItem(this.modeKey) || 'matrix', false);
+    const savedMode = localStorage.getItem(this.modeKey) || 'matrix';
+    const legacyModeThemes = { matrix: 'matrix-green', cyber: 'cyber-amber', terminal: 'ghost-cyan', minimal: 'ghost-cyan', void: 'blood-red' };
+    this.setTheme(localStorage.getItem(this.themeKey) || legacyModeThemes[savedMode] || 'matrix-green', false);
+    this.setMode(savedMode, false);
     this.setActiveModule('profile', false);
   }
 
@@ -52,6 +56,7 @@ class OjasOS {
     this.palette = document.getElementById('ojas-command-palette');
     this.input = document.getElementById('ojas-command-input');
     this.results = document.getElementById('ojas-command-results');
+    this.themeSelect = document.getElementById('theme-select');
     this.modeSelect = document.getElementById('os-mode-select');
     this.moduleLabel = document.getElementById('os-active-module');
     this.toast = document.getElementById('ojas-notification');
@@ -148,9 +153,12 @@ class OjasOS {
   }
 
   getFilteredCommands() {
-    const query = (this.input?.value || '').trim().toLowerCase();
-    if (!query) return this.commands;
-    return this.commands.filter((command) => `${command.id} ${command.label} ${command.meta}`.toLowerCase().includes(query));
+    const terms = (this.input?.value || '').trim().toLowerCase().split(/\s+/).filter(Boolean);
+    if (terms.length === 0) return this.commands;
+    return this.commands.filter((command) => {
+      const searchable = `${command.id} ${command.label} ${command.meta}`.toLowerCase();
+      return terms.every((term) => searchable.includes(term));
+    });
   }
 
   renderResults() {
@@ -204,18 +212,25 @@ class OjasOS {
   }
 
   setMode(mode, announce = true) {
-    const modes = { matrix: 'matrix-green', cyber: 'cyber-amber', terminal: 'ghost-cyan', minimal: 'ghost-cyan', void: 'blood-red' };
-    const selected = modes[mode] ? mode : 'matrix';
-    const theme = modes[selected];
+    const supportedModes = ['matrix', 'cyber', 'terminal', 'minimal', 'void'];
+    const selected = supportedModes.includes(mode) ? mode : 'matrix';
     document.body.classList.remove('os-mode-matrix', 'os-mode-cyber', 'os-mode-terminal', 'os-mode-minimal', 'os-mode-void');
     document.body.classList.add(`os-mode-${selected}`);
-    document.body.classList.remove('matrix-green', 'cyber-amber', 'ghost-cyan', 'blood-red');
-    document.body.classList.add(theme);
-    document.getElementById('theme-select').value = theme;
+    document.body.dataset.mode = selected;
     if (this.modeSelect) this.modeSelect.value = selected;
-    matrixEngine?.setTheme?.(theme);
     localStorage.setItem(this.modeKey, selected);
     if (announce) this.notify(`${selected.toUpperCase()} ENVIRONMENT ACTIVE`, 'MODE');
+  }
+
+  setTheme(theme, announce = false) {
+    const supportedThemes = ['matrix-green', 'cyber-amber', 'ghost-cyan', 'blood-red'];
+    if (!supportedThemes.includes(theme)) return;
+    document.body.classList.remove(...supportedThemes);
+    document.body.classList.add(theme);
+    if (this.themeSelect) this.themeSelect.value = theme;
+    matrixEngine?.setTheme?.(theme);
+    localStorage.setItem(this.themeKey, theme);
+    if (announce) this.notify(`${theme.replace('-', ' ').toUpperCase()} PALETTE ACTIVE`, 'THEME');
   }
 
   runScan() {

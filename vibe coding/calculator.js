@@ -192,7 +192,7 @@ class ScientificCalculator {
           <span class="text-dim">> CALC HISTORY</span>
           <button class="calc-history-clear-btn" id="calc-history-clear" aria-label="Clear history">[FLUSH]</button>
         </div>
-        <div class="calc-history-list" id="calc-history-list">
+        <div class="calc-history-list" id="calc-history-list" role="group" aria-label="Calculation history">
           <div class="calc-history-empty text-dim">No computations logged yet.</div>
         </div>
       </div>
@@ -268,7 +268,8 @@ class ScientificCalculator {
       });
       this.listen(this.scene, 'touchmove', (event) => {
         const touch = event.touches[0];
-        if (touch) this.handlePointerMove(touch.clientX, touch.clientY);
+        const isInteractive = event.target instanceof Element && event.target.closest('button, input, select, a');
+        if (touch) this.handlePointerMove(touch.clientX, touch.clientY, isInteractive);
       }, { passive: true });
       this.listen(this.scene, 'touchend', () => {
         this.targetTiltX = 0;
@@ -419,6 +420,8 @@ class ScientificCalculator {
   }
 
   appendPostfix(sym) {
+    if (!this.expression) return;
+    this.justEvaluated = false;
     this.appendText(sym);
   }
 
@@ -431,11 +434,13 @@ class ScientificCalculator {
   appendPower2() {
     if (!this.expression) return;
     // Wrap last number or closing paren in (...)^2
+    this.justEvaluated = false;
     this.appendText('^2');
   }
 
   negate() {
     if (!this.expression) return;
+    this.justEvaluated = false;
     if (this.expression.startsWith('-')) {
       this.expression = this.expression.slice(1);
     } else {
@@ -451,7 +456,7 @@ class ScientificCalculator {
 
   percent() {
     if (!this.expression) return;
-    this.appendText('%');
+    this.appendPostfix('%');
   }
 
   appendText(text) {
@@ -558,7 +563,7 @@ class ScientificCalculator {
     // Show result first
     this.updateDisplay(result.value);
     this.animateResult();
-    terminalAudio?.playAccessGranted?.();
+    terminalAudio?.playEasterEgg?.('calculator');
 
     // Then briefly show the egg message in result line
     this.scheduleAnimation(() => {
@@ -587,7 +592,7 @@ class ScientificCalculator {
     if (this.isSelfDestructing) return;
     this.isSelfDestructing = true;
 
-    terminalAudio?.playError?.();
+    terminalAudio?.playEasterEgg?.('self-destruct');
 
     const overlay = this.destructOverlay;
     if (!overlay || !this.destructCount || !this.destructFill) {
@@ -614,7 +619,7 @@ class ScientificCalculator {
         // "Explosion"
         this.destructCount.textContent = '💥';
         this.destructFill.style.width = '0%';
-        terminalAudio?.playMatrixWarp?.();
+        terminalAudio?.playEasterEgg?.('self-destruct-impact');
 
         this.destructTimer = this.scheduleAnimation(() => {
           // Safe reset
@@ -718,22 +723,29 @@ class ScientificCalculator {
       return;
     }
     this.historyList.innerHTML = this.history.map(h => `
-      <div class="calc-history-entry" role="listitem">
+      <button class="calc-history-entry" type="button">
         <span class="calc-hist-expr text-dim">${this.escapeHtml(h.expr)}</span>
         <span class="calc-hist-eq text-accent">→</span>
         <span class="calc-hist-result">${this.escapeHtml(h.result)}</span>
         ${h.note ? `<span class="calc-hist-note text-dim">${this.escapeHtml(h.note)}</span>` : ''}
-      </div>`).join('');
+      </button>`).join('');
 
   }
 
   handleMouseMove(event) {
     if (this.prefersReducedMotion || !this.isActive) return;
-    this.handlePointerMove(event.clientX, event.clientY);
+    const isInteractive = event.target instanceof Element && event.target.closest('button, input, select, a');
+    this.handlePointerMove(event.clientX, event.clientY, isInteractive);
   }
 
-  handlePointerMove(clientX, clientY) {
+  handlePointerMove(clientX, clientY, isInteractive = false) {
     if (!this.scene || !this.isActive || this.prefersReducedMotion) return;
+    if (isInteractive) {
+      this.targetTiltX = 0;
+      this.targetTiltY = 0;
+      this.startTiltLoop();
+      return;
+    }
     const rect = this.scene.getBoundingClientRect();
     const dx = Math.max(-1, Math.min(1, (clientX - (rect.left + rect.width / 2)) / Math.max(rect.width / 2, 1)));
     const dy = Math.max(-1, Math.min(1, (clientY - (rect.top + rect.height / 2)) / Math.max(rect.height / 2, 1)));

@@ -121,6 +121,10 @@ class MatrixApp {
 
   finishBoot() {
     if (this.bootComplete) return;
+    clearInterval(this.bootInterval);
+    clearTimeout(this.bootFinishTimer);
+    this.bootInterval = null;
+    this.bootFinishTimer = null;
     this.bootComplete = true;
     localStorage.setItem("ojas_os_booted", "true");
 
@@ -335,11 +339,13 @@ class MatrixApp {
     }
     if (githubEl) {
       githubEl.href = c.github;
-      githubEl.textContent = c.github;
+      const githubUrl = new URL(c.github);
+      githubEl.textContent = `${githubUrl.host}${githubUrl.pathname}`;
     }
     if (linkedinEl) {
       linkedinEl.href = c.linkedin;
-      linkedinEl.textContent = c.linkedin;
+      const linkedinUrl = new URL(c.linkedin);
+      linkedinEl.textContent = `${linkedinUrl.host}${linkedinUrl.pathname}`;
     }
     if (portfolioEl) {
       portfolioEl.href = c.portfolio;
@@ -513,7 +519,7 @@ Your productivity has increased by 0.0001%."`
     const btnRedPill = document.getElementById("btn-red-pill");
     if (btnRedPill) {
       btnRedPill.addEventListener("click", () => {
-        terminalAudio.playMatrixWarp();
+        terminalAudio.playEasterEgg("red-pill");
         if (matrixEngine) matrixEngine.triggerOverdrive(10000);
         this.showModal(
           "THE RED PILL: WELCOME TO THE DESERT OF THE REAL",
@@ -528,7 +534,7 @@ You see the Matrix for what it truly is: pure asynchronous JavaScript.`
     const btnBluePill = document.getElementById("btn-blue-pill");
     if (btnBluePill) {
       btnBluePill.addEventListener("click", () => {
-        terminalAudio.playError();
+        terminalAudio.playEasterEgg("blue-pill");
         this.showModal(
           "THE BLUE PILL: IGNORANCE IS BLISS",
           `You chose the Blue Pill.
@@ -659,9 +665,9 @@ Back to reality!`
     const audioBtn = document.getElementById("audio-toggle-btn");
     if (audioBtn) {
       audioBtn.textContent = terminalAudio.enabled ? "AUDIO: ON" : "AUDIO: OFF";
+      audioBtn.setAttribute("aria-pressed", String(terminalAudio.enabled));
       audioBtn.addEventListener("click", () => {
-        const state = terminalAudio.toggle();
-        audioBtn.textContent = state ? "AUDIO: ON" : "AUDIO: OFF";
+        terminalAudio.toggle();
       });
     }
 
@@ -669,10 +675,14 @@ Back to reality!`
     const crtBtn = document.getElementById("crt-toggle-btn");
     const crtOverlay = document.getElementById("crt-overlay");
     if (crtBtn && crtOverlay) {
+      const isEnabled = !crtOverlay.classList.contains("disabled");
+      crtBtn.textContent = isEnabled ? "CRT: ON" : "CRT: OFF";
+      crtBtn.setAttribute("aria-pressed", String(isEnabled));
       crtBtn.addEventListener("click", () => {
         crtOverlay.classList.toggle("disabled");
         const isDisabled = crtOverlay.classList.contains("disabled");
         crtBtn.textContent = isDisabled ? "CRT: OFF" : "CRT: ON";
+        crtBtn.setAttribute("aria-pressed", String(!isDisabled));
         terminalAudio.playKeyClick();
       });
     }
@@ -682,9 +692,7 @@ Back to reality!`
     if (themeSelect) {
       themeSelect.addEventListener("change", (e) => {
         const theme = e.target.value;
-        document.body.classList.remove("matrix-green", "cyber-amber", "ghost-cyan", "blood-red");
-        document.body.classList.add(theme);
-        if (matrixEngine) matrixEngine.setTheme(theme);
+        this.os?.setTheme(theme, true);
         terminalAudio.playAccessGranted();
       });
     }
@@ -742,6 +750,7 @@ Back to reality!`
     window.addEventListener("click", () => {
       this.globalClickCount++;
       if (this.globalClickCount === 25) {
+        terminalAudio.playEasterEgg("click-hunt");
         this.showModal(
           "CLASSIFIED TRANSMISSION",
           `THE SYSTEM HAS BEEN WATCHING YOU.
@@ -755,8 +764,7 @@ It's JavaScript.`
   }
 
   triggerKonamiOverride() {
-    terminalAudio.playAccessGranted();
-    terminalAudio.playMatrixWarp();
+    terminalAudio.playEasterEgg("konami");
     if (matrixEngine) matrixEngine.triggerOverdrive(12000);
 
     const container = document.getElementById("terminal-wrapper");

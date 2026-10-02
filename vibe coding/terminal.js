@@ -482,8 +482,13 @@ Speed boosted by 300%. Character decay threshold randomized.
   }
 
   cmdSudo(args) {
-    terminalAudio.playError();
-    if (args && args.toLowerCase().includes("hire-me")) {
+    const isHireRequest = Boolean(args && args.toLowerCase().includes("hire-me"));
+    if (isHireRequest) {
+      terminalAudio.playEasterEgg("hire-me");
+    } else {
+      terminalAudio.playError();
+    }
+    if (isHireRequest) {
       const response = `
 <div class="terminal-block">
   <span class="text-bright font-bold">Nice try.</span>
@@ -500,10 +505,9 @@ Speed boosted by 300%. Character decay threshold randomized.
   <br>Work Ethic: <span class="text-bright">[VERIFIED: 100% Passion & Curiosity]</span>
   <br><br>
   <span class="text-accent font-bold">ACCESS OVERRIDE GRANTED!</span>
-  <br>Click to dispatch interview offer: <a href="mailto:ojas.sahu.dev@gmail.com?subject=Interview%20Offer%20//%20Fresher%20Interview%202026" class="terminal-link font-bold">[SEND UPLINK INVITATION]</a>
+  <br>Click to open a direct contact channel: <a href="mailto:ojassahu002@gmail.com?subject=OJAS.OS%20//%20Direct%20Uplink" class="terminal-link font-bold">[SEND UPLINK INVITATION]</a>
 </div>`;
       this.printRaw(response);
-      terminalAudio.playAccessGranted();
       return;
     }
 
@@ -539,7 +543,7 @@ This incident will be reported to Agent Smith.
   }
 
   cmdCoffee() {
-    terminalAudio.playDataStream();
+    terminalAudio.playEasterEgg("coffee");
     const asciiCoffee = `
 <pre class="ascii-art">
       (  (
@@ -560,6 +564,7 @@ This incident will be reported to Agent Smith.
   }
 
   cmdHack() {
+    if (this.isExecuting) return;
     this.isExecuting = true;
     terminalAudio.playDataStream();
 
@@ -589,7 +594,7 @@ This incident will be reported to Agent Smith.
   <span class="text-accent font-bold">LOOT ACQUIRED:</span>
   <br> • cat_memes_2026.tar.gz (1.2 GB)
   <br> • production_database_fixed_at_3am.sql (404 MB)
-  <br> • secret_interview_shortlist.csv [ojas_sahu added to top]
+  <br> • secret_interview_shortlist.csv [ojassahu1 added to top]
   <br><br>
   <span class="text-dim">Welcome to the Matrix, Operator.</span>
 </div>`);
@@ -643,14 +648,8 @@ This incident will be reported to Agent Smith.
 
     const target = themeMap[themeName.toLowerCase()];
     if (target) {
-      const modeByTheme = {
-        "matrix-green": "matrix",
-        "cyber-amber": "cyber",
-        "ghost-cyan": "terminal",
-        "blood-red": "void"
-      };
-      if (window.ojasOS?.setMode) {
-        window.ojasOS.setMode(modeByTheme[target]);
+      if (window.ojasOS?.setTheme) {
+        window.ojasOS.setTheme(target, true);
         this.printLine(`Theme switched to: ${themeName.toUpperCase()}`, "text-glow");
         return;
       }
@@ -667,7 +666,7 @@ This incident will be reported to Agent Smith.
 
   cmdLs() {
     const files = Object.keys(PROFILE_DATA.virtualFiles);
-    let output = `<div class="terminal-block"><span class="text-dim">Directory: /matrix/root/ojas_sahu</span><br>`;
+    let output = `<div class="terminal-block"><span class="text-dim">Directory: /matrix/root/ojassahu1</span><br>`;
     files.forEach((f) => {
       const isExe = f.endsWith(".exe");
       output += `<span class="${isExe ? "text-accent font-bold" : "text-bright"}">${f}</span>  `;
@@ -681,9 +680,14 @@ This incident will be reported to Agent Smith.
       this.printLine("Usage: cat <filename>", "text-dim");
       return;
     }
-    const content = PROFILE_DATA.virtualFiles[fileName];
-    if (content) {
-      terminalAudio.playKeyClick();
+    const files = PROFILE_DATA.virtualFiles;
+    if (Object.prototype.hasOwnProperty.call(files, fileName)) {
+      const content = files[fileName];
+      if (fileName === "secret_flag.dat") {
+        terminalAudio.playEasterEgg("terminal-secret");
+      } else {
+        terminalAudio.playKeyClick();
+      }
       this.printRaw(`<div class="terminal-block"><pre class="code-pre">${this.escapeHTML(content)}</pre></div>`);
     } else {
       terminalAudio.playError();
@@ -705,13 +709,10 @@ This incident will be reported to Agent Smith.
 
   cmdAudio(state) {
     if (state === "on") {
-      terminalAudio.enabled = true;
-      localStorage.setItem("matrix_terminal_audio", "true");
-      terminalAudio.playAccessGranted();
+      terminalAudio.setEnabled(true);
       this.printLine("Audio synthesizer ONLINE.", "text-glow");
     } else if (state === "off") {
-      terminalAudio.enabled = false;
-      localStorage.setItem("matrix_terminal_audio", "false");
+      terminalAudio.setEnabled(false);
       this.printLine("Audio synthesizer MUTED.", "text-dim");
     } else {
       const current = terminalAudio.toggle();
@@ -719,7 +720,10 @@ This incident will be reported to Agent Smith.
     }
     // Update header toggle button state
     const btn = document.getElementById("audio-toggle-btn");
-    if (btn) btn.textContent = terminalAudio.enabled ? "AUDIO: ON" : "AUDIO: OFF";
+    if (btn) {
+      btn.textContent = terminalAudio.enabled ? "AUDIO: ON" : "AUDIO: OFF";
+      btn.setAttribute("aria-pressed", String(terminalAudio.enabled));
+    }
   }
 
   cmdExit() {
@@ -788,7 +792,7 @@ Have you tried turning your brain off and on again?`
 
   checkClickEasterEgg() {
     if (this.clickCount === 12) {
-      terminalAudio.playMatrixWarp();
+      terminalAudio.playEasterEgg("terminal-click");
       this.printRaw(`
 <div class="terminal-block text-glow font-bold">
 [CLASSIFIED PROTOCOL TRIGGERED]

@@ -11,7 +11,7 @@ const PROFILE_DATA = {
   // Identity & Core Information
   identity: {
     name: "Ojas Sahu",
-    handle: "ojas_sahu",
+    handle: "ojassahu1",
     role: "B.Tech CSE Student & Full-Stack Developer",
     education: "B.Tech in Computer Science & Engineering (Core)",
     institution: "Tech University // 2026 Batch",
@@ -78,7 +78,7 @@ const PROFILE_DATA = {
       ],
       links: {
         demo: "#",
-        github: "https://github.com/ojassahu"
+        github: "https://github.com/ojassahu1?tab=overview&from=2026-09-01&to=2026-09-30"
       }
     },
     {
@@ -98,7 +98,7 @@ const PROFILE_DATA = {
       ],
       links: {
         demo: "#",
-        github: "https://github.com/ojassahu"
+        github: "https://github.com/ojassahu1?tab=overview&from=2026-09-01&to=2026-09-30"
       }
     },
     {
@@ -118,7 +118,7 @@ const PROFILE_DATA = {
       ],
       links: {
         demo: "https://tj-task-2026-ojas-sahu.vercel.app/",
-        github: "https://github.com/ojassahu"
+        github: "https://github.com/ojassahu1?tab=overview&from=2026-09-01&to=2026-09-30"
       }
     },
     {
@@ -138,7 +138,7 @@ const PROFILE_DATA = {
       ],
       links: {
         demo: "#",
-        github: "https://github.com/ojassahu"
+        github: "https://github.com/ojassahu1?tab=overview&from=2026-09-01&to=2026-09-30"
       }
     }
   ],
@@ -157,9 +157,9 @@ const PROFILE_DATA = {
 
   // Contact Links & Handles
   contact: {
-    github: "https://github.com/ojassahu",
-    linkedin: "https://linkedin.com/in/ojassahu",
-    email: "mailto:ojas.sahu.dev@gmail.com",
+    github: "https://github.com/ojassahu1?tab=overview&from=2026-09-01&to=2026-09-30",
+    linkedin: "https://www.linkedin.com/in/ojas-sahu-5b2940219",
+    email: "mailto:ojassahu002@gmail.com",
     portfolio: "https://tj-task-2026-ojas-sahu.vercel.app/",
     terminalChannel: "IRC #ojas-matrix // Port 1337"
   },
@@ -198,7 +198,7 @@ Philosophy: Clean code, fast loads, and unapologetically bold aesthetics.`,
 
     "hire_ojas.exe": `[EXECUTABLE BINARY DETECTED]
 Output: Candidate Ojas Sahu is highly motivated, learns fast, and ships clean code.
-Action: Send an email to ojas.sahu.dev@gmail.com to initiate protocol!`,
+Action: Send an email to ojassahu002@gmail.com to initiate protocol!`,
 
     "secret_flag.dat": `FLAG{NEO_FOLLOWS_THE_WHITE_RABBIT_2026}
 Congratulations, Operator. You found the hidden filesystem artifact.
