@@ -180,20 +180,6 @@ vibe coding/
 
 ---
 
-## 🛠️ How to Customize
-
-All portfolio details are located in `data.js`. Simply open `data.js` to customize:
-
-* `identity.name`: Your name
-* `identity.role`: Your title / focus
-* `identity.tagline`: Your motto or punchline
-* `skills`: Array of categories with skills, proficiency percentages, and status tags
-* `projects`: Array of projects with description, tech tags, and links
-* `contact`: Email, GitHub, LinkedIn, and portfolio URLs
-* `diagnostics`: Custom hardware/humor stats
-
----
-
 ## 🌐 Running Locally
 
 No build tools, Node modules, or bundle steps are required!
@@ -209,7 +195,7 @@ No build tools, Node modules, or bundle steps are required!
    npx serve .
    ```
 
-3. Open `http://localhost:8000` in your browser.
+3. Open `tj-tasks-2026-ojas-sahu-vibe-coding.vercel.app` in your browser.
 
 The site is static and requires no package installation.
 
