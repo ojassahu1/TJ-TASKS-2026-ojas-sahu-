@@ -30,6 +30,12 @@
   <aside id="boot-overlay" role="dialog" aria-modal="true" aria-label="Terminal Boot Sequence">
     <div class="boot-terminal-box">
       <div class="boot-header">> OJAS.OS KERNEL v4.09.26 // SECURE BOOT</div>
+      <div class="boot-progress" aria-label="Boot progress">
+        <div class="boot-progress-bar" aria-hidden="true">
+          <span id="boot-progress-fill" class="boot-progress-fill"></span>
+        </div>
+        <span id="boot-progress-label">0%</span>
+      </div>
       <div id="boot-log" aria-live="polite"></div>
       <div class="boot-skip-container">
         <button id="skip-boot-btn" aria-label="Skip OJAS.OS initialization">[ SKIP BOOT / ESC ]</button>
@@ -151,7 +157,7 @@
         <!-- ================= PANE 01: PROFILE ================= -->
         <section id="pane-profile" class="terminal-pane active" role="tabpanel" aria-labelledby="tab-profile">
           <div class="profile-card-layout">
-            
+
             <!-- Left Column: Avatar & Telemetry -->
             <div class="profile-avatar-column">
               <div class="avatar-ascii-frame">
@@ -218,6 +224,32 @@
           </div>
         </section>
 
+        <!-- ================= PANE 02: TECH STACK ================= -->
+        <section id="pane-tech-stack" class="terminal-pane" role="tabpanel" aria-labelledby="tab-tech-stack">
+          <div class="terminal-block">
+            <span class="text-bright font-bold">TECH_STACK // LOADED MODULES</span>
+            <br><br>
+            <div class="diag-grid">
+              <div class="diag-card">
+                <div class="diag-label">FRONTEND</div>
+                <div class="diag-value text-bright">HTML5, CSS3, JS, React, Tailwind</div>
+              </div>
+              <div class="diag-card">
+                <div class="diag-label">BACKEND</div>
+                <div class="diag-value text-bright">Node.js, Express, REST APIs</div>
+              </div>
+              <div class="diag-card">
+                <div class="diag-label">LANGUAGES</div>
+                <div class="diag-value text-accent">Java, Python, C++, TypeScript</div>
+              </div>
+              <div class="diag-card">
+                <div class="diag-label">SYSTEMS</div>
+                <div class="diag-value text-bright">Git, Linux, CLI, AI Integration</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <!-- ================= PANE 02: SKILLS ================= -->
         <section id="pane-skills" class="terminal-pane" role="tabpanel" aria-labelledby="tab-skills">
           <div class="skills-intro" style="margin-bottom: 16px;">
@@ -235,6 +267,61 @@
           </div>
           <div id="projects-container" class="projects-grid">
             <!-- Dynamically populated from data.js -->
+          </div>
+        </section>
+
+        <!-- ================= NEW MODULES: TIMELINE, GITHUB, LAB, ACHIEVEMENTS, LOGS ================= -->
+        <section id="pane-timeline" class="terminal-pane" role="tabpanel" aria-labelledby="tab-timeline">
+          <div class="terminal-block">
+             <span class="text-bright font-bold">PROJECT TIMELINE</span>
+             <br><br>
+             2026<br>
+             │<br>
+             ├── PROJECT_04 (NeuralFlow)<br>
+             │<br>
+             ├── PROJECT_03 (TitanFit)<br>
+             │<br>
+             2025<br>
+             │<br>
+             ├── PROJECT_02 (Piko)<br>
+             │<br>
+             └── PROJECT_01 (CyberDeck)
+          </div>
+        </section>
+
+        <section id="pane-github" class="terminal-pane" role="tabpanel" aria-labelledby="tab-github">
+          <div class="terminal-block">
+             <span class="text-bright font-bold">GITHUB ACTIVITY</span>
+             <br><br>
+             REPOSITORIES    XX<br>
+             FOLLOWERS       XX<br>
+             PUBLIC PROJECTS XX
+          </div>
+        </section>
+
+        <section id="pane-experiments" class="terminal-pane" role="tabpanel" aria-labelledby="tab-experiments">
+          <div class="terminal-block">
+             <span class="text-bright font-bold">EXPERIMENT LAB</span>
+             <br><br>
+             [EXPERIMENT_001] STATUS: STABLE
+          </div>
+        </section>
+
+        <section id="pane-achievements" class="terminal-pane" role="tabpanel" aria-labelledby="tab-achievements">
+          <div class="terminal-block">
+             <span class="text-bright font-bold">ACHIEVEMENTS</span>
+             <br><br>
+             07 / 12 UNLOCKED
+          </div>
+        </section>
+
+        <section id="pane-logs" class="terminal-pane" role="tabpanel" aria-labelledby="tab-logs">
+          <div class="terminal-block">
+             <span class="text-bright font-bold">DEVELOPER LOG</span>
+             <br><br>
+             [2026-10-02]<br>
+             > SYSTEM EXPANSION<br>
+             > Added scrollable OS modules
           </div>
         </section>
 
@@ -284,7 +371,7 @@
               </div>
               <div class="contact-link-row">
                 <span class="text-dim">[GITHUB]</span>
-                <a id="contact-github" href="https://github.com/ojassahu1?tab=overview&from=2026-09-01&to=2026-09-30" target="_blank" rel="noopener" class="terminal-link">github.com/ojassahu1</a>
+                <a id="contact-github" href="https://github.com/ojassahu1" target="_blank" rel="noopener" class="terminal-link">github.com/ojassahu1</a>
               </div>
               <div class="contact-link-row">
                 <span class="text-dim">[LINKEDIN]</span>
@@ -322,20 +409,20 @@
       </div>
     </main>
 
-    <!-- Footer Status & Tips -->
-    <footer class="matrix-footer" role="contentinfo">
-      <div class="footer-left">
-        <span>MATRIX OS [v2.6]</span>
-        <span>•</span>
-        <span>STATUS: ALL CIRCUITS NOMINAL</span>
-        <span>•</span>
-        <span>TRY: ↑ ↑ ↓ ↓ ← → ← → B A</span>
-      </div>
-      <div class="footer-right">
-        <span>COORDINATES: 20.59° N, 78.96° E (INDIA)</span>
-      </div>
-      <button id="restart-ojas-os" class="footer-restart-btn">[ RESTART OJAS.OS ]</button>
-    </footer>
+        <!-- Footer Status & Tips -->
+        <footer class="matrix-footer" role="contentinfo">
+          <div class="footer-left">
+            <span>CONNECTION TERMINATED</span>
+            <span>•</span>
+            <span>SYSTEM STATUS: OFFLINE</span>
+            <span>•</span>
+            <span>> type "reboot" to relaunch the shell</span>
+          </div>
+          <div class="footer-right">
+            <span>COORDINATES: 20.59° N, 78.96° E (INDIA)</span>
+          </div>
+          <button id="restart-ojas-os" class="footer-restart-btn">[ RESTART OJAS.OS ]</button>
+        </footer>
 
   </div>
 

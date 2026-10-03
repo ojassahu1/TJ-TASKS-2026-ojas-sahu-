@@ -47,8 +47,10 @@ class MatrixApp {
     this.bindEscapeHandling();
     this.bindEasterEggs();
     this.bindLiveTelemetry();
+    this.bindScrollObserver();
     this.renderDynamicContent();
     this.os = typeof OjasOS === "function" ? new OjasOS(this) : null;
+    this.switchTab(this.currentTab);
 
     // Start boot sequence
     this.runBootSequence();
@@ -59,6 +61,8 @@ class MatrixApp {
   runBootSequence() {
     const bootOverlay = document.getElementById("boot-overlay");
     const bootLog = document.getElementById("boot-log");
+    const progressFill = document.getElementById("boot-progress-fill");
+    const progressLabel = document.getElementById("boot-progress-label");
     const skipBtn = document.getElementById("skip-boot-btn");
 
     if (!bootOverlay || !bootLog) {
@@ -74,6 +78,8 @@ class MatrixApp {
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       bootLog.textContent = "SYSTEM READY. WELCOME, OJAS.";
+      if (progressFill) progressFill.style.width = "100%";
+      if (progressLabel) progressLabel.textContent = "100%";
       this.finishBoot();
       return;
     }
@@ -88,28 +94,39 @@ class MatrixApp {
       "> ACCESS GRANTED."
     ];
 
+    bootLog.innerHTML = "";
     let index = 0;
+    const updateProgress = () => {
+      const pct = Math.min(100, Math.round((index / messages.length) * 100));
+      if (progressFill) progressFill.style.width = `${pct}%`;
+      if (progressLabel) progressLabel.textContent = `${pct}%`;
+    };
+
     this.bootInterval = setInterval(() => {
       if (index < messages.length) {
         const line = document.createElement("div");
         line.className = index === messages.length - 1 ? "boot-line highlight" : "boot-line";
         line.textContent = messages[index];
         bootLog.appendChild(line);
+        updateProgress();
         terminalAudio.playKeyClick();
         index++;
       } else {
         clearInterval(this.bootInterval);
-        this.bootFinishTimer = setTimeout(() => this.finishBoot(), 400);
+        if (progressFill) progressFill.style.width = "100%";
+        if (progressLabel) progressLabel.textContent = "100%";
+        this.bootFinishTimer = setTimeout(() => this.finishBoot(), 450);
       }
     }, 210);
 
-    // Skip button. ESC is handled by the app-wide overlay controller.
     if (skipBtn && this.bootSkipHandler) {
       skipBtn.removeEventListener("click", this.bootSkipHandler);
     }
     this.bootSkipHandler = () => {
       clearInterval(this.bootInterval);
       clearTimeout(this.bootFinishTimer);
+      if (progressFill) progressFill.style.width = "100%";
+      if (progressLabel) progressLabel.textContent = "100%";
       this.finishBoot();
     };
 
@@ -391,48 +408,48 @@ class MatrixApp {
 
   switchTab(targetTab) {
     if (!targetTab) return;
-    if (targetTab === "terminal" && this.currentTab !== "terminal") {
-      this.terminalReturnTab = this.currentTab;
-    }
     this.currentTab = targetTab;
 
-    // Update active tab buttons
-    document.querySelectorAll(".nav-tab-btn").forEach((btn) => {
-      if (btn.getAttribute("data-tab") === targetTab) {
-        btn.classList.add("active");
-        btn.setAttribute("aria-selected", "true");
-      } else {
-        btn.classList.remove("active");
-        btn.setAttribute("aria-selected", "false");
-      }
+    document.querySelectorAll(".terminal-pane").forEach((pane) => {
+      const isActive = pane.id === `pane-${targetTab}`;
+      pane.classList.toggle("active", isActive);
+      pane.hidden = !isActive;
     });
 
-    // Update active panes
-    document.querySelectorAll(".terminal-pane").forEach((pane) => {
-      if (pane.id === `pane-${targetTab}`) {
-        pane.classList.add("active");
-      } else {
-        pane.classList.remove("active");
-      }
+    document.querySelectorAll(".nav-tab-btn").forEach((btn) => {
+      const isActive = btn.getAttribute("data-tab") === targetTab;
+      btn.classList.toggle("active", isActive);
+      btn.setAttribute("aria-selected", String(isActive));
     });
+
+    const targetElement = document.getElementById(`pane-${targetTab}`);
+    if (targetElement) {
+      this.triggerGlitch(targetElement);
+    }
 
     if (typeof calcInstance !== "undefined" && calcInstance) {
       calcInstance.setActive(targetTab === "calculator");
     }
 
-    // If switching to terminal tab, autofocus input
     if (targetTab === "terminal") {
       const input = document.getElementById("terminal-cli-input");
       if (input) setTimeout(() => input.focus(), 50);
     }
 
-    // Lazy-init calculator on first visit
     if (targetTab === "calculator" && typeof initCalcIfNeeded === "function") {
       setTimeout(() => initCalcIfNeeded(), 30);
     }
 
     this.terminal?.setContext?.(targetTab);
     this.os?.setActiveModule?.(targetTab);
+  }
+
+  triggerGlitch(element) {
+    if (!(element instanceof HTMLElement)) return;
+    element.classList.remove("glitch-brief");
+    void element.offsetWidth;
+    element.classList.add("glitch-brief");
+    setTimeout(() => element.classList.remove("glitch-brief"), 240);
   }
 
   // ================= INTERACTIVE ACTION BUTTONS ================= //
@@ -639,6 +656,7 @@ Back to reality!`
     this.modalReturnFocus = activeElement instanceof HTMLElement ? activeElement : null;
     modalTitle.textContent = title;
     modalBody.textContent = text;
+    this.triggerGlitch(modal);
     modal.classList.add("open");
     document.getElementById("modal-close-btn")?.focus();
   }
@@ -647,6 +665,7 @@ Back to reality!`
     const modal = document.getElementById("matrix-modal");
     if (!modal?.classList.contains("open")) return false;
 
+    this.triggerGlitch(modal);
     modal.classList.remove("open");
     terminalAudio.playKeyClick();
 
@@ -784,7 +803,26 @@ Try typing 'matrix' or 'hack' in the terminal!`
     );
   }
 
-  // ================= LIVE TELEMETRY CLOCK & STATS ================= //
+  bindScrollObserver() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id.replace("pane-", "");
+          document.querySelectorAll(".nav-tab-btn").forEach((btn) => {
+            if (btn.getAttribute("data-tab") === id) {
+              btn.classList.add("active");
+              btn.setAttribute("aria-selected", "true");
+            } else {
+              btn.classList.remove("active");
+              btn.setAttribute("aria-selected", "false");
+            }
+          });
+        }
+      });
+    }, { root: document.querySelector(".terminal-content-area"), threshold: 0.3 });
+
+    document.querySelectorAll(".terminal-pane").forEach((pane) => observer.observe(pane));
+  }
 
   bindLiveTelemetry() {
     const timeEl = document.getElementById("telemetry-time");

@@ -136,10 +136,14 @@ class OjasOS {
     this.activeIndex = 0;
     this.renderResults();
     this.input.focus();
+    if (this.palette instanceof HTMLElement) {
+      this.app?.triggerGlitch?.(this.palette);
+    }
   }
 
   closePalette() {
     if (!this.palette?.classList.contains('open')) return false;
+    this.app?.triggerGlitch?.(this.palette);
     this.palette.classList.remove('open');
     this.palette.setAttribute('aria-hidden', 'true');
     const focusTarget = this.returnFocus;

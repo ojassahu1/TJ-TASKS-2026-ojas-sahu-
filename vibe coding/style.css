@@ -92,8 +92,10 @@ body.blood-red {
 
 html, body {
   width: 100%;
+  height: 100%;
   min-height: 100vh;
-  overflow-x: hidden;
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
   background-color: var(--bg-primary);
   color: var(--text-primary);
   font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', Courier, monospace;
@@ -101,6 +103,7 @@ html, body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior: none;
 }
 
 :where(button, a, input, select, textarea, [tabindex]):focus-visible {
@@ -218,6 +221,33 @@ html, body {
   letter-spacing: 1px;
 }
 
+.boot-progress {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+  margin: 12px 0 18px;
+  color: var(--text-dim);
+  font-size: 11px;
+}
+
+.boot-progress-bar {
+  position: relative;
+  height: 10px;
+  background: rgba(0, 255, 102, 0.08);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+}
+
+.boot-progress-fill {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--border-bright), var(--text-accent));
+  box-shadow: 0 0 12px var(--glow-color);
+  transition: width 0.18s ease-out;
+}
+
 #boot-log {
   font-size: 13px;
   display: flex;
@@ -228,12 +258,22 @@ html, body {
 
 .boot-line {
   color: var(--text-primary);
+  opacity: 0;
+  transform: translateY(6px);
+  animation: bootLineIn 0.22s ease forwards;
 }
 
 .boot-line.highlight {
   color: var(--text-bright);
   font-weight: bold;
   text-shadow: 0 0 8px var(--glow-color);
+}
+
+@keyframes bootLineIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .boot-skip-container {
@@ -265,7 +305,8 @@ html, body {
   width: 100%;
   max-width: 1240px;
   margin: 0 auto;
-  min-height: 100vh;
+  height: calc(100vh - 32px);
+  min-height: 600px;
   display: flex;
   flex-direction: column;
   padding: 16px;
@@ -563,23 +604,29 @@ html, body {
 .terminal-content-area {
   padding: 20px;
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
   max-height: calc(100vh - 280px);
-  min-height: 400px;
+  scroll-behavior: auto;
 }
 
 .terminal-pane {
   display: none;
-  animation: fadeIn 0.25s ease;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px dashed var(--border-color);
+  opacity: 0;
+  transform: translateY(8px);
 }
 
 .terminal-pane.active {
   display: block;
+  animation: fadeIn 0.24s ease forwards;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(8px); filter: brightness(0.9); }
+  to { opacity: 1; transform: translateY(0); filter: brightness(1); }
 }
 
 /* ---------------- PROFILE PANE (01: PROFILE) ---------------- */
@@ -1592,6 +1639,18 @@ body.ojas-scan-active #terminal-main-window { animation: ojasSystemScan 1s ease;
   0%, 100% { filter: none; }
   30% { filter: brightness(1.45) saturate(0.7); }
   55% { filter: contrast(1.25) brightness(0.85); }
+}
+
+@keyframes matrixGlitch {
+  0% { transform: translate3d(0, 0, 0); opacity: 1; filter: none; }
+  18% { transform: translate3d(-2px, 0, 0); opacity: 0.9; filter: drop-shadow(0 0 6px var(--glow-color)); }
+  38% { transform: translate3d(2px, 0, 0); opacity: 1; filter: hue-rotate(12deg) contrast(1.15); }
+  55% { transform: translate3d(-1px, 0, 0); opacity: 0.8; }
+  100% { transform: translate3d(0, 0, 0); opacity: 1; filter: none; }
+}
+
+.glitch-brief {
+  animation: matrixGlitch 0.22s ease-out 1;
 }
 
 .sr-only {
