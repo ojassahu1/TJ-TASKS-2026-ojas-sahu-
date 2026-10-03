@@ -100,9 +100,12 @@ class ScientificCalculator {
       <!-- Header label -->
       <div class="calc-header-bar">
         <span class="calc-brand">QUANTUM CALC <span class="calc-ver text-dim">v9.∞</span></span>
-        <div class="calc-mode-group">
-          <button class="calc-mode-btn active" id="calc-mode-deg" data-mode="deg" aria-pressed="true">DEG</button>
-          <button class="calc-mode-btn" id="calc-mode-rad" data-mode="rad" aria-pressed="false">RAD</button>
+        <div class="calc-header-controls">
+          <span class="calc-science-indicator" aria-label="Scientific mode enabled">SCI</span>
+          <div class="calc-mode-group">
+            <button class="calc-mode-btn active" id="calc-mode-deg" data-mode="deg" aria-pressed="true">DEG</button>
+            <button class="calc-mode-btn" id="calc-mode-rad" data-mode="rad" aria-pressed="false">RAD</button>
+          </div>
         </div>
       </div>
 
@@ -135,7 +138,7 @@ class ScientificCalculator {
         <!-- Row 0: Scientific top row -->
         <button class="calc-btn sci wide-2" data-action="clear" aria-label="All Clear">AC</button>
         <button class="calc-btn sci" data-action="backspace" aria-label="Backspace">⌫</button>
-        <button class="calc-btn sci" data-action="percent" aria-label="Percent">%</button>
+        <button class="calc-btn sci" data-action="reciprocal" aria-label="Reciprocal">1/x</button>
         <button class="calc-btn sci" data-action="factorial" aria-label="Factorial">n!</button>
 
         <!-- Row 1: Trig -->
@@ -144,13 +147,19 @@ class ScientificCalculator {
         <button class="calc-btn sci" data-action="func" data-fn="tan">tan</button>
         <button class="calc-btn sci" data-action="func" data-fn="log">log</button>
 
-        <!-- Row 2: More sci -->
+        <!-- Row 2: Inverse trig -->
+        <button class="calc-btn sci" data-action="func" data-fn="asin">asin</button>
+        <button class="calc-btn sci" data-action="func" data-fn="acos">acos</button>
+        <button class="calc-btn sci" data-action="func" data-fn="atan">atan</button>
         <button class="calc-btn sci" data-action="func" data-fn="ln">ln</button>
+
+        <!-- Row 3: More sci -->
         <button class="calc-btn sci" data-action="func" data-fn="sqrt">√</button>
         <button class="calc-btn sci" data-action="squared">x²</button>
         <button class="calc-btn sci" data-action="power">xʸ</button>
+        <button class="calc-btn sci" data-action="percent" aria-label="Percent">%</button>
 
-        <!-- Row 3: Constants -->
+        <!-- Row 4: Constants -->
         <button class="calc-btn sci const" data-action="const" data-val="π">π</button>
         <button class="calc-btn sci const" data-action="const" data-val="e">e</button>
         <button class="calc-btn sci" data-action="paren-open">(</button>
@@ -305,6 +314,7 @@ class ScientificCalculator {
       case 'negate':      this.negate();             break;
       case 'percent':     this.percent();            break;
       case 'factorial':   this.appendPostfix('!');   break;
+      case 'reciprocal':  this.reciprocal();         break;
       case 'squared':     this.appendPower2();       break;
       case 'power':       this.appendOp('^');        break;
       case 'paren-open':  this.appendRaw('(');       break;
@@ -436,6 +446,18 @@ class ScientificCalculator {
     // Wrap last number or closing paren in (...)^2
     this.justEvaluated = false;
     this.appendText('^2');
+  }
+
+  reciprocal() {
+    if (!this.expression) {
+      this.expression = '1/(';
+      this.justEvaluated = false;
+      this.updateDisplay();
+      return;
+    }
+    this.expression = `1/(${this.expression})`;
+    this.justEvaluated = false;
+    this.updateDisplay();
   }
 
   negate() {
@@ -617,18 +639,16 @@ class ScientificCalculator {
         this.destructTimer = this.scheduleAnimation(tick, 1000);
       } else {
         // "Explosion"
-        this.destructCount.textContent = '💥';
+        this.destructCount.textContent = '0';
         this.destructFill.style.width = '0%';
         terminalAudio?.playEasterEgg?.('self-destruct-impact');
 
         this.destructTimer = this.scheduleAnimation(() => {
-          // Safe reset
           overlay.classList.remove('active');
           this.scene?.classList.remove('calc-shake');
           this.isSelfDestructing = false;
           this.clear();
-          // Show aftermath message in result line
-          if (this.resultLine) this.resultLine.textContent = 'SYSTEM RESTORED.';
+          if (this.resultLine) this.resultLine.textContent = 'JUST KIDDING. MATH ERROR.';
           this.scheduleAnimation(() => {
             if (this.resultLine) this.resultLine.textContent = '0';
           }, 1800);

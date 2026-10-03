@@ -58,6 +58,7 @@ const CalcEngine = (() => {
       return Math.tan(r);
     },
     'asin':  (x) => { if (Math.abs(x) > 1) throw { code: 'DOMAIN' }; return angleMode === 'deg' ? Math.asin(x) * 180 / Math.PI : Math.asin(x); },
+    'inv':   (x) => { if (x === 0) throw { code: 'DIV_ZERO' }; return 1 / x; },
     'acos':  (x) => { if (Math.abs(x) > 1) throw { code: 'DOMAIN' }; return angleMode === 'deg' ? Math.acos(x) * 180 / Math.PI : Math.acos(x); },
     'atan':  (x) => angleMode === 'deg' ? Math.atan(x) * 180 / Math.PI : Math.atan(x),
     'log':   (x) => { if (x <= 0) throw { code: 'DOMAIN' }; return Math.log10(x); },

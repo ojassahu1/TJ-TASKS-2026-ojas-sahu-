@@ -1772,6 +1772,28 @@ body.ojas-scan-active #terminal-main-window { animation: ojasSystemScan 1s ease;
   font-weight: 400;
 }
 
+.calc-header-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.calc-science-indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  padding: 3px 7px;
+  border: 1px solid var(--border-bright);
+  background: rgba(0, 255, 102, 0.09);
+  color: var(--text-accent);
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  box-shadow: 0 0 8px rgba(0, 255, 102, 0.18);
+}
+
 .calc-mode-group {
   display: flex;
   gap: 4px;
@@ -2113,6 +2135,7 @@ body.ojas-scan-active #terminal-main-window { animation: ojasSystemScan 1s ease;
   text-shadow: 0 0 20px rgba(255,23,68,0.9);
   line-height: 1;
   animation: destructCount 0.5s ease-out;
+  letter-spacing: 0.08em;
 }
 
 @keyframes destructCount {
