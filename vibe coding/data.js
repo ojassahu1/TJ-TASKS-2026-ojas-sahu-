@@ -78,7 +78,7 @@ const PROFILE_DATA = {
       ],
       links: {
         demo: "#",
-        github: "https://github.com/ojassahu1"
+        github: "https://github.com/ojassahu1?tab=overview&from=2026-09-01&to=2026-09-30"
       }
     },
     {
@@ -98,7 +98,7 @@ const PROFILE_DATA = {
       ],
       links: {
         demo: "#",
-        github: "https://github.com/ojassahu1"
+        github: "https://github.com/ojassahu1?tab=overview&from=2026-09-01&to=2026-09-30"
       }
     },
     {
@@ -118,7 +118,7 @@ const PROFILE_DATA = {
       ],
       links: {
         demo: "https://tj-task-2026-ojas-sahu.vercel.app/",
-        github: "https://github.com/ojassahu1"
+        github: "https://github.com/ojassahu1?tab=overview&from=2026-09-01&to=2026-09-30"
       }
     },
     {
@@ -138,7 +138,7 @@ const PROFILE_DATA = {
       ],
       links: {
         demo: "#",
-        github: "https://github.com/ojassahu1"
+        github: "https://github.com/ojassahu1?tab=overview&from=2026-09-01&to=2026-09-30"
       }
     }
   ],
@@ -157,7 +157,7 @@ const PROFILE_DATA = {
 
   // Contact Links & Handles
   contact: {
-    github: "https://github.com/ojassahu1",
+    github: "https://github.com/ojassahu1?tab=overview&from=2026-09-01&to=2026-09-30",
     linkedin: "https://www.linkedin.com/in/ojas-sahu-5b2940219",
     email: "mailto:ojassahu002@gmail.com",
     portfolio: "https://tj-task-2026-ojas-sahu.vercel.app/",
